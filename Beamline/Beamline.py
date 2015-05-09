@@ -48,13 +48,4 @@ class Beamline(object):
         return None
 
     def __iter__(self):
-        self._iter_component_index = 0
-        return self
-
-    def __next__(self):
-        if self._iter_component_index>=len(self._components):
-            raise StopIteration
-
-        component = self._components[self._iter_component_index]
-        self._iter_component_index+=1
-        return component
+        return iter(self._components)

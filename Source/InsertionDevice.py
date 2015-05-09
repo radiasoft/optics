@@ -1,6 +1,7 @@
 """
 Base class for all insertion devices: wiggler, undulator
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from numpy import pi
 import scipy.constants.codata

@@ -1,6 +1,7 @@
 """
 Implement an undulator with vertical and horizontal magnetic fields.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import numpy as np
 import scipy.constants.codata

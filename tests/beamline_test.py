@@ -2,6 +2,8 @@
 Example illustrating a possible implementation of "beamline components" / "a glossary".
 May need python3 to run.
 """
+import pytest
+
 from Beam.ElectronBeam import ElectronBeam
 from Source.UndulatorVertical import UndulatorVertical
 from Lens.LensIdeal import LensIdeal
@@ -93,20 +95,23 @@ class ID1234(Beamline):
 # Stage 3: calculate the radiation
 ###################################################################################################
 
-# Specify to use SRW.
-# In case of shadow use SHADOWDriver().
-# This would be the only line to change - if sufficiently configured for shadow as well.
-driver = SRWDriver()
+def test_conformance1():
+    # Specify to use SRW.
+    # In case of shadow use SHADOWDriver().
+    # This would be the only line to change - if sufficiently configured for shadow as well.
+    driver = SRWDriver()
 
-# Calculate the radiation.
-radiation = driver.calculateRadiation(electron_beam=ESRFStorageRing(),
-                                      radiation_source=Undulator35(),
-                                      beamline=ID1234())
+    # Calculate the radiation.
+    radiation = driver.calculateRadiation(electron_beam=ESRFStorageRing(),
+                                          radiation_source=Undulator35(),
+                                          beamline=ID1234())
 
-# Calculate intensity.
-intensity = driver.calculateIntensity(radiation)
-# Calculate phases.
-phase = driver.calculatePhase(radiation)
+    # Calculate intensity.
+    intensity = driver.calculateIntensity(radiation)
+    # Calculate phases.
+    phase = driver.calculatePhase(radiation)
+    assert 1237847826759680.0 == intensity[0][9215], \
+        'Quick verification of intensity value'
 
-#print(intensity)
-#print(phase)
+    #print(intensity)
+    #print(phase)
