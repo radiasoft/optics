@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from numpy import pi
 import scipy.constants.codata
 
-from Source.Source import Source
+from optics.Source.Source import Source
 
 
 class InsertionDevice(Source):

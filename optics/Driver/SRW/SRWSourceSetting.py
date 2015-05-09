@@ -8,12 +8,12 @@ Although we use only one Source Setting object in this example it is easily poss
 One can define a different source setting class for wigglers than for undulators. The driver then needs to know if it
 processes a wiggler that its settings object is different from that of an undulator and act accordingly.
 """
-from Driver.AbstractDriverSetting import AbstractDriverSetting
+from optics.Driver.AbstractDriverSetting import AbstractDriverSetting
 
 
 class SRWSourceSetting(AbstractDriverSetting):
     def __init__(self):
-        from Driver.SRW.SRWDriver import SRWDriver
+        from optics.Driver.SRW.SRWDriver import SRWDriver
         AbstractDriverSetting.__init__(self,
                                        SRWDriver())
         self._meth        = 1         #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"

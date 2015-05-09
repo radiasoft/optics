@@ -3,12 +3,12 @@ Minimal implementation of a SRW driver.
 """
 from srwlib import *
 
-from Driver.AbstractDriver import AbstractDriver
-from Driver.SRW.SRWSourceSetting import SRWSourceSetting
-from Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
+from optics.Driver.AbstractDriver import AbstractDriver
+from optics.Driver.SRW.SRWSourceSetting import SRWSourceSetting
+from optics.Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
 
-from Source.Undulator import Undulator
-from Lens.LensIdeal import LensIdeal
+from optics.Source.Undulator import Undulator
+from optics.Lens.LensIdeal import LensIdeal
 
 
 class SRWDriver(AbstractDriver):

@@ -4,7 +4,7 @@ Implement a vertical undulator.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from Source.Undulator import Undulator
+from optics.Source.Undulator import Undulator
 
 
 class UndulatorVertical(Undulator):

@@ -6,7 +6,7 @@ This class is intentionally shorten for simplicity.
 Usually we would need to consider also the electron distribution within the beam.
 """
 
-from Driver.DriverSettingManager import DriverSettingManager
+from optics.Driver.DriverSettingManager import DriverSettingManager
 
 
 class ElectronBeam(DriverSettingManager):

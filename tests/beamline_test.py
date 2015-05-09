@@ -4,14 +4,14 @@ May need python3 to run.
 """
 import pytest
 
-from Beam.ElectronBeam import ElectronBeam
-from Source.UndulatorVertical import UndulatorVertical
-from Lens.LensIdeal import LensIdeal
-from Beamline.Beamline import Beamline
-from Beamline.BeamlinePosition import BeamlinePosition
+from optics.Beam.ElectronBeam import ElectronBeam
+from optics.Source.UndulatorVertical import UndulatorVertical
+from optics.Lens.LensIdeal import LensIdeal
+from optics.Beamline.Beamline import Beamline
+from optics.Beamline.BeamlinePosition import BeamlinePosition
 
-from Driver.SRW.SRWDriver import SRWDriver
-from Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
+from optics.Driver.SRW.SRWDriver import SRWDriver
+from optics.Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
 
 ###################################################################################################
 # Stage 1: abstract definition of the setting (electron beam, radiation source, beamline)

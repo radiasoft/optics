@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import numpy as np
 import scipy.constants.codata
 
-from Source.InsertionDevice import InsertionDevice
+from optics.Source.InsertionDevice import InsertionDevice
 
 
 class Undulator(InsertionDevice):
