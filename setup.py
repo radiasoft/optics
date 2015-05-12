@@ -5,7 +5,7 @@
 :license: Apache, see LICENSE for more details.
 """
 
-from pybivio.setup import setup
+from pykern.setup import setup
 
 setup(
     name='optics',
