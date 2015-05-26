@@ -4,7 +4,7 @@ Every source can attach settings, i.e. inherits from DriverSettingsManager.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from optics.Driver.DriverSettingManager import DriverSettingManager
+from optics.driver.driver_setting_manager import DriverSettingManager
 
 
 class Source(DriverSettingManager):

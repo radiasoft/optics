@@ -1,7 +1,7 @@
 """
 Represents an ideal lens.
 """
-from optics.BeamlineComponent import BeamlineComponent
+from optics.beamline.beamline_component import BeamlineComponent
 
 
 class LensIdeal(BeamlineComponent):

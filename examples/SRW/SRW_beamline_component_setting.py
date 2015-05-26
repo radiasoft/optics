@@ -8,14 +8,15 @@ Although we use only one BeamlineComponent Setting object in this example it is 
 One can define a different source setting class for lenses than for apertures. The driver then needs to know if it
 processes a lens that its settings object is different from that of an aperature and act accordingly.
 """
-from optics.Driver.AbstractDriverSetting import AbstractDriverSetting
+from optics.driver.abstract_driver_setting import AbstractDriverSetting
 
 
 class SRWBeamlineComponentSetting(AbstractDriverSetting):
     def __init__(self):
-        from optics.Driver.SRW.SRWDriver import SRWDriver
+        from examples.SRW.SRW_driver import SRWDriver
         AbstractDriverSetting.__init__(self,
-                                       driver = SRWDriver())
+                                       driver=SRWDriver())
+
         #***********Wavefront Propagation Parameters:
         #[0]: Auto-Resize (1) or not (0) Before propagation
         #[1]: Auto-Resize (1) or not (0) After propagation

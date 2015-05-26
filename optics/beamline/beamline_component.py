@@ -4,7 +4,7 @@ Enforce to name every every component.
 Every beamline component can store settings (inherits from DriverSettingsManager)
 """
 
-from optics.Driver.DriverSettingManager import DriverSettingManager
+from optics.driver.driver_setting_manager import DriverSettingManager
 
 
 class BeamlineComponent(DriverSettingManager):

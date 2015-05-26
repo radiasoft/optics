@@ -10,7 +10,7 @@ class AbstractDriver(object):
 
         :param electron_beam: ElectronBeam object
         :param radiation_source: Source object
-        :param beamline: Beamline object
+        :param beamline: beamline object
         :return: Radiation object. The driver is free to design this object as it likes it. The only requirement is that
         this object is used to calculate intensity, phase, ... That means the driver needs to understands this object.
         In the case of SRW this would be something carrying the wavefront in shadow it would be a beam.

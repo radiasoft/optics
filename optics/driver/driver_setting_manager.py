@@ -45,7 +45,7 @@ class DriverSettingManager(object):
     def settings(self, driver):
         """
         Returns the settings for a given driver.
-        :param driver: Driver to look for settings.
+        :param driver: driver to look for settings.
         :return: Returns the first settings stored for the given driver. Or None if there are no settings for the given driver.
         """
         for driver_settings in self._driver_settings:
@@ -57,7 +57,7 @@ class DriverSettingManager(object):
     def hasSettings(self, driver):
         """
         Checks if there are settings for the given driver.
-        :param driver: Driver to check for attached settings.
+        :param driver: driver to check for attached settings.
         :return: True if there are settings for the given driver. False otherwise.
         """
         has_driver = self.settings(driver) is not None

@@ -6,11 +6,13 @@ The only requirement is that it inherits from AbstractDriverSetting that is init
 
 Although we use only one ElectronBeam Setting object in this example it is easily possible to use multiple if needed/wished.
 """
-from optics.Driver.AbstractDriverSetting import AbstractDriverSetting
+from optics.driver.abstract_driver_setting import AbstractDriverSetting
 
 
 class ElectronBeamSetting(AbstractDriverSetting):
     def __init__(self):
-        from optics.Driver.SRW.SRWDriver import SRWDriver
+        from examples.SRW.SRW_driver import SRWDriver
         AbstractDriverSetting.__init__(self,
-                                       driver = SRWDriver())
+                                       driver=SRWDriver())
+
+

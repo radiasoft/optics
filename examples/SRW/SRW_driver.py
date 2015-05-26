@@ -3,13 +3,13 @@ Minimal implementation of a SRW driver.
 """
 from srwlib import *
 
-from optics.Driver.AbstractDriver import AbstractDriver
-from optics.Driver.SRW.SRWSourceSetting import SRWSourceSetting
-from optics.Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
 
-from optics.Source.Undulator import Undulator
-from optics.Lens.LensIdeal import LensIdeal
+from optics.driver.abstract_driver import AbstractDriver
+from optics.source.undulator import Undulator
+from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 
+from examples.SRW.SRW_source_setting import SRWSourceSetting
+from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 class SRWDriver(AbstractDriver):
 
@@ -91,7 +91,7 @@ class SRWDriver(AbstractDriver):
 
         :param electron_beam: ElectronBeam object
         :param radiation_source: Source object
-        :param beamline: Beamline object
+        :param beamline: beamline object
         :return: SRW wavefront.
         """
 

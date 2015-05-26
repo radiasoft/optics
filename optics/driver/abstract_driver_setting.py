@@ -12,7 +12,7 @@ class AbstractDriverSetting(object):
     def isDriver(self, driver):
 
         try:
-            is_driver = isinstance(self._driver, type(driver))
+            is_driver = type(self._driver) is type(driver)
         except:
             is_driver = False
 

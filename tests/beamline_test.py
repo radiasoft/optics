@@ -2,16 +2,14 @@
 Example illustrating a possible implementation of "beamline components" / "a glossary".
 May need python3 to run.
 """
-import pytest
+from examples.SRW.SRW_driver import SRWDriver
+from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
-from optics.Beam.ElectronBeam import ElectronBeam
-from optics.Source.UndulatorVertical import UndulatorVertical
-from optics.Lens.LensIdeal import LensIdeal
-from optics.Beamline.Beamline import Beamline
-from optics.Beamline.BeamlinePosition import BeamlinePosition
-
-from optics.Driver.SRW.SRWDriver import SRWDriver
-from optics.Driver.SRW.SRWBeamlineComponentSetting import SRWBeamlineComponentSetting
+from optics.beam.electron_beam import ElectronBeam
+from optics.source.undulator_vertical import UndulatorVertical
+from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
+from optics.beamline.beamline import Beamline
+from optics.beamline.beamline_position import BeamlinePosition
 
 ###################################################################################################
 # Stage 1: abstract definition of the setting (electron beam, radiation source, beamline)
