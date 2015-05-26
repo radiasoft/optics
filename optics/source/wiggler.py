@@ -1,5 +1,7 @@
 __author__ = 'labx'
-
+"""
+Implements a wiggler.
+"""
 
 from optics.source.insertion_device import InsertionDevice
 

@@ -3,18 +3,27 @@ __author__ = 'labx'
 import sys
 from PyQt4.QtGui import QApplication
 
+from optics.beam.electron_beam import ElectronBeam
+from optics.source.bending_magnet import BendingMagnet
+
 from examples.shadow.driver.shadow_driver import ShadowDriver
-from examples.shadow.sources.shadow_bending_magnet import ShadowBendingMagnet
 
 def run_shadow():
+
+   # Create the "glossary" object.
+   electron_beam = ElectronBeam(6.04,1.0,0.200,1)
+   bending_magnet = BendingMagnet(25.1772, 2.0)
+
+   # Instantiate the driver.
    driver = ShadowDriver()
 
-   bending_magnet = ShadowBendingMagnet()
+   # Calculate the beam without beamline.
+   shadow_beam = driver.calculateRadiation(electron_beam=electron_beam,
+                                           radiation_source=bending_magnet,
+                                           beamline=None)
 
-   shadow_beam = driver.processSource(bending_magnet)
-
+   # Return the "radiation object" which is a shadow beam in the shadow case.
    return shadow_beam
-
 
 if __name__ == "__main__":
    a = QApplication(sys.argv)

@@ -4,19 +4,17 @@ __author__ = 'labx'
 import Shadow
 
 from optics.driver.abstract_driver_setting import AbstractDriverSetting
-from optics.source.bending_magnet import BendingMagnet
-from examples.shadow.driver.shadow_driver import ShadowDriver
 from examples.shadow.sources.shadow_source import ShadowSource
 
-class ShadowBendingMagnet(BendingMagnet, ShadowSource):
-    def __init__(self):
-        BendingMagnet.__init__(self)
+class ShadowBendingMagnet(ShadowSource):
+    def __init__(self, electron_beam, bending_magnet):
         ShadowSource.__init__(self)
-
-        self.addSettings(ShadowBendingMagnetSetting())
+        self._electron_beam = electron_beam
+        self._bending_magnet = bending_magnet
 
     def newInstance(self):
-        return ShadowBendingMagnet()
+        return ShadowBendingMagnet(self._electron_beam,
+                                   self._bending_magnet)
 
     def toNativeShadowSource(self):
         src = Shadow.Source()
@@ -38,7 +36,8 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
         src.F_OPD = 1
         src.F_SR_TYPE = 0
 
-        settings = self.settings(ShadowDriver())
+        from examples.shadow.driver.shadow_driver import ShadowDriver
+        settings = self._bending_magnet.settings(ShadowDriver())
 
         src.NPOINT = settings._number_of_rays
         src.ISTAR1 = settings._seed
@@ -49,11 +48,17 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
         src.SIGMAZ = settings._sigma_z
         src.EPSI_X = settings._emittance_x
         src.EPSI_Z = settings._emittance_z
-        src.BENER = settings._energy
+
+        # Energy is stored in ElectronBeam
+        src.BENER = self._electron_beam._energy
+
         src.EPSI_DX = settings._distance_from_waist_x
         src.EPSI_DZ = settings._distance_from_waist_z
-        src.R_MAGNET = settings._magnetic_radius
-        src.R_ALADDIN = settings._magnetic_radius * 100
+
+        # Radius is stored in BendingMagnet
+        src.R_MAGNET  = self._bending_magnet.radius()
+        src.R_ALADDIN = self._bending_magnet.radius() * 100
+
         src.HDIV1 = settings._horizontal_half_divergence_from
         src.HDIV2 = settings._horizontal_half_divergence_to
         src.VDIV1 = settings._max_vertical_half_divergence_from
@@ -66,7 +71,8 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
         return src
 
     def fromNativeShadowSource(self, src):
-        settings = self.settings(ShadowDriver())
+        from examples.shadow.driver.shadow_driver import ShadowDriver
+        settings = self._bending_magnet.settings(ShadowDriver())
 
         settings._number_of_rays=src.NPOINT
         settings._seed=src.ISTAR1
@@ -80,11 +86,14 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
         settings._sigma_z=src.SIGMAZ
         settings._emittance_x=src.EPSI_X
         settings._emittance_z=src.EPSI_Z
-        settings._energy=src.BENER
+
+        # TODO: belongs to ElectronBeam
+        #settings._energy=src.BENER
         settings._distance_from_waist_x=src.EPSI_DX
         settings._distance_from_waist_z=src.EPSI_DZ
 
-        settings._magnetic_radius=src.R_MAGNET
+        # TODO: belongs to BendingMagnet
+        #settings._magnetic_radius=src.R_MAGNET
         settings._horizontal_half_divergence_from=src.HDIV1
         settings._horizontal_half_divergence_to=src.HDIV2
         settings._max_vertical_half_divergence_from=src.VDIV1
@@ -92,7 +101,7 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
         settings._calculation_mode = (src.FDISTR-4)/2
 
         settings._optimize_source = src.F_BOUND_SOUR
-        settings._optimize_file_name = src.FILE_BOUND
+        settings._optimize_file_name = src.FILE_BOUND.decode("utf-8")
 
         if not src.NTOTALPOINT is None:
             settings._max_number_of_rejected_rays = src.NTOTALPOINT
@@ -102,6 +111,7 @@ class ShadowBendingMagnet(BendingMagnet, ShadowSource):
 
 class ShadowBendingMagnetSetting(AbstractDriverSetting):
     def __init__(self):
+        from examples.shadow.driver.shadow_driver import ShadowDriver
         AbstractDriverSetting.__init__(self,
                                        driver=ShadowDriver())
 
@@ -114,10 +124,8 @@ class ShadowBendingMagnetSetting(AbstractDriverSetting):
         self._sigma_z = 0.0036
         self._emittance_x = 3.8E-7
         self._emittance_z = 3.8E-9
-        self._energy = 6.04
         self._distance_from_waist_x = 0.0
         self._distance_from_waist_z = 0.0
-        self._magnetic_radius = 25.1772
         self._horizontal_half_divergence_from = 0.0005
         self._horizontal_half_divergence_to = 0.0005
         self._max_vertical_half_divergence_from = 1.0

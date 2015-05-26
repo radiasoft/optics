@@ -10,7 +10,7 @@ def test_shadow():
     os.remove("SRDISTR")
     os.remove("SRSPEC")
 
-    # The results are random.
+    # The rays are random thats why test for ray shape.
     shape_rays = rays.shape
     assert shape_rays == (5000, 18), \
         'Quick test rays shape'
