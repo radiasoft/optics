@@ -115,7 +115,7 @@ class ShadowBendingMagnetSetting(AbstractDriverSetting):
         AbstractDriverSetting.__init__(self,
                                        driver=ShadowDriver())
 
-        self._number_of_rays = 5000
+        self._number_of_rays = 50000
         self._seed = 6775431
         self._e_min = 5000
         self._e_max = 100000

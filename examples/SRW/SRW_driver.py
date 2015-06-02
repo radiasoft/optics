@@ -6,9 +6,11 @@ from srwlib import *
 
 from optics.driver.abstract_driver import AbstractDriver
 from optics.source.undulator import Undulator
+from optics.source.bending_magnet import BendingMagnet
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 
-from examples.SRW.SRW_source_setting import SRWSourceSetting
+from examples.SRW.SRW_undulator_setting import SRWUndulatorSetting
+from examples.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
 from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 class SRWDriver(AbstractDriver):
@@ -66,7 +68,37 @@ class SRWDriver(AbstractDriver):
 
         return magnetic_fields
 
-    def _createQuadraticSRWWavefrontSingleEnergy(self, grid_size, grid_length, z_start, srw_electron_beam, energy):
+    def _SRWBendingMagnet(self, bending_magnet):
+        """
+        Private helper function to translate generic bending magnet to srw "multipole magnet".
+        Should/could go to another file.
+        """
+        magnetic_fields = []
+
+        B = bending_magnet.magneticField()
+        radius = bending_magnet.radius()
+    
+        # TODO: do the right conversion.
+        bending_magnet_length = 1.0/radius
+
+        srw_bending_magnet = SRWLMagFldM(B, 1, 'n', bending_magnet_length)
+
+        return srw_bending_magnet
+
+    def _magnetFieldFromBendingMagnet(self, bending_magnet):
+        """
+        Private helper function to generate srw magnetic fields.
+        Should/could go to another file.
+        """
+
+        srw_bending_magnet = self._SRWBendingMagnet(bending_magnet)
+
+        magnetic_fields = SRWLMagFldC([srw_bending_magnet],
+                                      array('d', [0]), array('d', [0]), array('d', [0]))
+
+        return magnetic_fields
+
+    def _createRectangularSRWWavefrontSingleEnergy(self, grid_size, grid_length_vertical, grid_length_horizontal, z_start, srw_electron_beam, energy):
         """
         Private helper function to translate a srw wavefront.
         """
@@ -76,14 +108,20 @@ class SRWDriver(AbstractDriver):
         srw_wavefront.mesh.zStart = float(z_start)
         srw_wavefront.mesh.eStart = energy
         srw_wavefront.mesh.eFin   = energy
-        srw_wavefront.mesh.xStart = -grid_length
-        srw_wavefront.mesh.xFin   =  grid_length
-        srw_wavefront.mesh.yStart = -grid_length
-        srw_wavefront.mesh.yFin   =  grid_length
+        srw_wavefront.mesh.xStart = -grid_length_vertical
+        srw_wavefront.mesh.xFin   =  grid_length_vertical
+        srw_wavefront.mesh.yStart = -grid_length_horizontal
+        srw_wavefront.mesh.yFin   =  grid_length_horizontal
 
         srw_wavefront.partBeam = srw_electron_beam
 
         return srw_wavefront
+
+    def _createQuadraticSRWWavefrontSingleEnergy(self, grid_size, grid_length, z_start, srw_electron_beam, energy):
+        """
+        Private helper function to translate a srw wavefront.
+        """
+        return self._createRectangularSRWWavefrontSingleEnergy(grid_size, grid_length, grid_length, z_start, srw_electron_beam, energy)
 
     def calculateRadiation(self,electron_beam, radiation_source, beamline):
         """
@@ -126,9 +164,37 @@ class SRWDriver(AbstractDriver):
                 # It tells the DriverSettingsManager to use SRW settings.
                 undulator_settings = undulator.settings(self)
             else:
-                undulator_settings = SRWSourceSetting()
+                undulator_settings = SRWUndulatorSetting()
 
             srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, undulator_settings.toList())
+        elif isinstance(radiation_source, BendingMagnet):
+            bending_magnet = radiation_source
+
+            magFldCnt = self._magnetFieldFromBendingMagnet(bending_magnet)
+
+            z_start = position_first_component.z()
+
+            horizontal_angle = 0.1 #Horizontal angle [rad]
+            horizontal_grid_length = 0.5*horizontal_angle*z_start #Initial horizontal position [m]
+
+            vertical_angle = 0.02 #Vertical angle [rad]
+            vertical_grid_length = 0.5*vertical_angle*z_start   #Initial vertical position [m]
+
+            energy = 0.5*0.123984
+            wavefront = self._createRectangularSRWWavefrontSingleEnergy(grid_size=1000,
+                                                                        grid_length_vertical=vertical_grid_length,
+                                                                        grid_length_horizontal=horizontal_grid_length,
+                                                                        z_start=z_start,
+                                                                        srw_electron_beam=srw_electron_beam,
+                                                                        energy=energy)
+
+            # Use custom settings if present. Otherwise use default SRW settings.
+            if bending_magnet.hasSettings(self):
+                bending_magnet_settings = bending_magnet.settings(self)
+            else:
+                bending_magnet_settings = SRWBendingMagnetSetting()
+
+            srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, bending_magnet_settings.toList())
         else:
             raise NotImplementedError
 

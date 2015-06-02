@@ -1,17 +1,13 @@
 """
-Implements SRW Source settings.
+Implements SRW Undulator settings.
 
 It is completely up to driver developer to design this object.
 The only requirement is that it inherits from AbstractDriverSetting that is initialized with the driver it belongs to.
-
-Although we use only one Source Setting object in this example it is easily possible to use multiple if needed/wished.
-One can define a different source setting class for wigglers than for undulators. The driver then needs to know if it
-processes a wiggler that its settings object is different from that of an undulator and act accordingly.
 """
 from optics.driver.abstract_driver_setting import AbstractDriverSetting
 
 
-class SRWSourceSetting(AbstractDriverSetting):
+class SRWUndulatorSetting(AbstractDriverSetting):
     def __init__(self):
         from examples.SRW.SRW_driver import SRWDriver
         AbstractDriverSetting.__init__(self,
