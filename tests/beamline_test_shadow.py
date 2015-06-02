@@ -12,5 +12,5 @@ def test_shadow():
 
     # The rays are random thats why test for ray shape.
     shape_rays = rays.shape
-    assert shape_rays == (5000, 18), \
+    assert shape_rays == (50000, 18), \
         'Quick test rays shape'
