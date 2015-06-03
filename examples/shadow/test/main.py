@@ -13,7 +13,7 @@ def run_shadow():
 
    # Create the "glossary" object.
    electron_beam = ElectronBeam(6.04,1.0,0.200,1)
-   bending_magnet = BendingMagnet(25.1772, 2.0)
+   bending_magnet = BendingMagnet(25.1772, 2.0,8000)
 
    # Instantiate the driver.
    driver = ShadowDriver()

@@ -118,7 +118,6 @@ class SRWDriver(AbstractDriver):
             # Add drift space between two components.
             if position.z() > current_z_position:
                 distance = position.z()-current_z_position
-                print("distance",distance)
                 srw_optical_element.append(SRWLOptD(distance))
                 srw_preferences.append(SRWBeamlineComponentSetting().toList())
                 current_z_position = position.z()

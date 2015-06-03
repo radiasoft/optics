@@ -108,7 +108,7 @@ def test_conformance1():
     intensity = driver.calculateIntensity(radiation)
     # Calculate phases.
     phase = driver.calculatePhase(radiation)
-    assert 1237847826759680.0 == intensity[0][9215], \
+    assert abs(7.770526e+14 - intensity[0][10,10])< 1e+7, \
         'Quick verification of intensity value'
 
     #print(intensity)

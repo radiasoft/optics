@@ -39,6 +39,11 @@ class ShadowBendingMagnet(ShadowSource):
         from examples.shadow.driver.shadow_driver import ShadowDriver
         settings = self._bending_magnet.settings(ShadowDriver())
 
+        # NOTE: photon energy is set on bending magnet.
+        # Energy is sync to settings object to avoid possible side effects - if any possible.
+        settings._e_min = self._bending_magnet.energy()
+        settings._e_max = self._bending_magnet.energy()
+
         src.NPOINT = settings._number_of_rays
         src.ISTAR1 = settings._seed
         src.PH1 = settings._e_min
