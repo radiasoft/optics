@@ -88,7 +88,9 @@ class SRWDriver(AbstractDriver):
             vertical_grid_length = 0.5*vertical_angle*z_start
 
             # Determine energy of the radiation.
-            energy = 0.5*0.123984
+            energy = bending_magnet.energy()
+
+            # Create rectangular SRW wavefront.
             wavefront = srw_adapter.createRectangularSRWWavefrontSingleEnergy(grid_size=10,
                                                                               grid_length_vertical=horizontal_grid_length,
                                                                               grid_length_horizontal=vertical_grid_length,
@@ -96,6 +98,7 @@ class SRWDriver(AbstractDriver):
                                                                               srw_electron_beam=srw_electron_beam,
                                                                               energy=energy)
 
+            # Calculate initial wavefront.
             srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, bending_magnet_settings.toList())
         else:
             raise NotImplementedError

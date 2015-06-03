@@ -101,7 +101,11 @@ def test_conformance1():
     # TODO: do the right conversion.
     radius = 1.0/effecitve_bending_magnet_length
     bending_magnet = BendingMagnet(radius=radius,
-                                   magnetic_field=0.4)
+                                   magnetic_field=0.4,
+                                   energy=0.5*0.123984)
+
+    # Attach SRW bending magnet settings.
+    # NOTE: Maybe angular acceptance is generic and should move to BendingMagnet or Source class??
     srw_bending_magnet_setting = SRWBendingMagnetSetting()
     srw_bending_magnet_setting.setAcceptanceAngle(horizontal_angle=0.1,
                                                   vertical_angle=0.02)
