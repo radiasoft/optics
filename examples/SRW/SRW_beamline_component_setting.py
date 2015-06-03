@@ -31,8 +31,8 @@ class SRWBeamlineComponentSetting(AbstractDriverSetting):
         #[10]: New Horizontal wavefront Center position after Shift (not yet implemented)
         #[11]: New Vertical wavefront Center position after Shift (not yet implemented)
 
-        self._auto_resize_before_propagation = False
-        self._auto_resize_after_propagation = False
+        self._auto_resize_before_propagation = True
+        self._auto_resize_after_propagation = True
         self._auto_resize_relative_precision = 1.0
         self._allow_semi_analytical_phase_treatment = False
         self._resize_on_ft_side = False

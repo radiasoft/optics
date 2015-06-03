@@ -7,7 +7,10 @@ from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSett
 
 from optics.beam.electron_beam import ElectronBeam
 from optics.source.bending_magnet import BendingMagnet
+
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
+from optics.beamline.optical_elements.image_plane import ImagePlane
+
 from optics.beamline.beamline import Beamline
 from optics.beamline.beamline_position import BeamlinePosition
 
@@ -26,9 +29,9 @@ from optics.beamline.beamline_position import BeamlinePosition
 class ESRFStorageRing(ElectronBeam):
     def __init__(self):
         ElectronBeam.__init__(self,
-                              energy_in_GeV=6.04,
-                              energy_spread=0.06,
-                              average_current=0.2,
+                              energy_in_GeV=3.0,
+                              energy_spread=0.01,
+                              average_current=0.5,
                               electrons=10**9)
 
 
@@ -50,8 +53,8 @@ class ID1234(Beamline):
         # If no special settings are set the driver will use its default settings.
         # If we do not wand to increase the resolution we can go with standard settings and would just remove the following 4 lines.
         lens_setting = SRWBeamlineComponentSetting()
-        lens_setting.setResizeResolutionHorizontal(1.0)
-        lens_setting.setResizeResolutionVertical(1.0)
+        lens_setting.setResizeResolutionHorizontal(2.0)
+        lens_setting.setResizeResolutionVertical(2.0)
         lens.addSettings(lens_setting)
 
 
@@ -64,6 +67,9 @@ class ID1234(Beamline):
         # Attach the component at its position to the beamline.
         self.attachComponentAt(lens, lens_position)
 
+        # Attach a screen/image plane.
+        plane_position = BeamlinePosition(10.0)
+        self.attachComponentAt(ImagePlane("Image screen"), plane_position)
 
 ###################################################################################################
 # Stage 2: attach settings to a generic beamline in case it was not done in stage 1 already.
@@ -102,8 +108,16 @@ def test_conformance1():
                                           beamline=ID1234())
 
     # Calculate intensity.
-    intensity = driver.calculateIntensity(radiation)
+    intensity, dim_x,dim_y = driver.calculateIntensity(radiation)
     # Calculate phases.
     phase = driver.calculatePhase(radiation)
-    assert 225.01979064941406 == intensity[0][9215], \
+    assert abs(1.7063003e+09 - intensity[10, 10])<1e+6, \
         'Quick verification of intensity value'
+
+    import matplotlib.pyplot as plt
+    print(dim_x.shape)
+    print(dim_y.shape)
+    print(intensity.shape)
+    plt.pcolormesh(dim_x,dim_y,intensity.transpose())
+    plt.colorbar()
+    plt.show()

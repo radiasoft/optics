@@ -1,13 +1,15 @@
 """
 Minimal implementation of a SRW driver.
 """
+import numpy as np
 from srwlib import *
-
 
 from optics.driver.abstract_driver import AbstractDriver
 from optics.source.undulator import Undulator
 from optics.source.bending_magnet import BendingMagnet
+
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
+from optics.beamline.optical_elements.image_plane import ImagePlane
 
 from examples.SRW.SRW_adapter import SRWAdapter
 from examples.SRW.SRW_undulator_setting import SRWUndulatorSetting
@@ -74,11 +76,11 @@ class SRWDriver(AbstractDriver):
 
             vertical_angle = 0.02 #Vertical angle [rad]
             vertical_grid_length = 0.5*vertical_angle*z_start   #Initial vertical position [m]
-
+            print(z_start, horizontal_grid_length, vertical_grid_length)
             energy = 0.5*0.123984
-            wavefront = srw_adapter.createRectangularSRWWavefrontSingleEnergy(grid_size=1000,
-                                                                              grid_length_vertical=vertical_grid_length,
-                                                                              grid_length_horizontal=horizontal_grid_length,
+            wavefront = srw_adapter.createRectangularSRWWavefrontSingleEnergy(grid_size=10,
+                                                                              grid_length_vertical=horizontal_grid_length,
+                                                                              grid_length_horizontal=vertical_grid_length,
                                                                               z_start=z_start,
                                                                               srw_electron_beam=srw_electron_beam,
                                                                               energy=energy)
@@ -108,14 +110,17 @@ class SRWDriver(AbstractDriver):
             # Add drift space between two components.
             if position.z() > current_z_position:
                 distance = position.z()-current_z_position
+                print("distance",distance)
                 srw_optical_element.append(SRWLOptD(distance))
                 srw_preferences.append(SRWBeamlineComponentSetting().toList())
                 current_z_position = position.z()
 
             if isinstance(component, LensIdeal):
-                srw_component= SRWLOptL(component.focalX(),
-                                        component.focalY())
+                srw_component = SRWLOptL(_Fx=component.focalX(),
+                                         _Fy=component.focalY())
                 srw_optical_element.append(srw_component)
+            elif isinstance(component, ImagePlane):
+                continue
             else:
                 raise NotImplementedError
 
@@ -128,7 +133,6 @@ class SRWDriver(AbstractDriver):
                 component_settings = SRWBeamlineComponentSetting()
 
             srw_preferences.append(component_settings.toList())
-
 
         # Create the srw beamline object.
         srw_beamline = SRWLOptC(srw_optical_element,
@@ -149,9 +153,10 @@ class SRWDriver(AbstractDriver):
         mesh = deepcopy(wavefront.mesh)
         intensity = array('f', [0]*mesh.nx*mesh.ny)
         srwl.CalcIntFromElecField(intensity, wavefront, 6, 0, 3, mesh.eStart, 0, 0)
-        plot_mesh_x = [1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx]
-        plot_mesh_y = [1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny]
-        return [intensity, plot_mesh_x, plot_mesh_y]
+        dim_x = np.linspace(1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx)
+        dim_y = np.linspace(1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny)
+        intensity = np.array(intensity).reshape((mesh.ny,mesh.nx))
+        return [intensity.transpose(), dim_x, dim_y]
 
     def calculatePhase(self, radiation):
         """
@@ -164,7 +169,7 @@ class SRWDriver(AbstractDriver):
 
         phase = array('d', [0]*mesh.nx*mesh.ny)
         srwl.CalcIntFromElecField(phase, wavefront, 0, 4, 3, mesh.eStart, 0, 0)
-        plot_mesh_x = [1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx]
-        plot_mesh_y = [1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny]
+        dim_x = np.linspace(1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx)
+        dim_y = np.linspace(1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny)
 
-        return [phase, plot_mesh_x, plot_mesh_y]
+        return [phase, dim_x, dim_y]
