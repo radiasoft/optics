@@ -21,6 +21,10 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
         self._useTermin   = 1           #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
         self._sampFactNxNyForProp = 0.7 #sampling factor for adjusting nx, ny (effective if > 0)
 
+        # TODO: check meaningfulness of these default values
+        self._horizontal_acceptance_angle = 0.1
+        self._vertical_acceptance_angle   = 0.01
+
     def toList(self):
         precision_parameter = [self._meth,
                                self._relPrec,
@@ -31,3 +35,13 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
                                self._sampFactNxNyForProp]
 
         return precision_parameter
+
+    def setAcceptanceAngle(self, horizontal_angle, vertical_angle):
+        self._horizontal_acceptance_angle = horizontal_angle
+        self._vertical_acceptance_angle   = vertical_angle
+
+    def horizontalAcceptanceAngle(self):
+        return self._horizontal_acceptance_angle
+
+    def verticalAcceptanceAngle(self):
+        return self._vertical_acceptance_angle

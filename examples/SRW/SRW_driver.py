@@ -69,14 +69,25 @@ class SRWDriver(AbstractDriver):
 
             magFldCnt = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet)
 
+            # Use custom settings if present. Otherwise use default SRW settings.
+            if bending_magnet.hasSettings(self):
+                bending_magnet_settings = bending_magnet.settings(self)
+            else:
+                bending_magnet_settings = SRWBendingMagnetSetting()
+
+            # Determine position of first optical element to calculate initial wavefront there.
             z_start = position_first_component.z()
 
-            horizontal_angle = 0.1 #Horizontal angle [rad]
-            horizontal_grid_length = 0.5*horizontal_angle*z_start #Initial horizontal position [m]
+            # Determine acceptances.
+            # Horizontal
+            horizontal_angle =  bending_magnet_settings.horizontalAcceptanceAngle()
+            horizontal_grid_length = 0.5*horizontal_angle*z_start
 
-            vertical_angle = 0.02 #Vertical angle [rad]
-            vertical_grid_length = 0.5*vertical_angle*z_start   #Initial vertical position [m]
-            print(z_start, horizontal_grid_length, vertical_grid_length)
+            # Vertical
+            vertical_angle = bending_magnet_settings.verticalAcceptanceAngle()
+            vertical_grid_length = 0.5*vertical_angle*z_start
+
+            # Determine energy of the radiation.
             energy = 0.5*0.123984
             wavefront = srw_adapter.createRectangularSRWWavefrontSingleEnergy(grid_size=10,
                                                                               grid_length_vertical=horizontal_grid_length,
@@ -84,12 +95,6 @@ class SRWDriver(AbstractDriver):
                                                                               z_start=z_start,
                                                                               srw_electron_beam=srw_electron_beam,
                                                                               energy=energy)
-
-            # Use custom settings if present. Otherwise use default SRW settings.
-            if bending_magnet.hasSettings(self):
-                bending_magnet_settings = bending_magnet.settings(self)
-            else:
-                bending_magnet_settings = SRWBendingMagnetSetting()
 
             srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, bending_magnet_settings.toList())
         else:

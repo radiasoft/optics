@@ -3,6 +3,7 @@ Example illustrating a possible implementation of "beamline components" / "a glo
 May need python3 to run.
 """
 from examples.SRW.SRW_driver import SRWDriver
+from examples.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
 from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 from optics.beam.electron_beam import ElectronBeam
@@ -101,6 +102,10 @@ def test_conformance1():
     radius = 1.0/effecitve_bending_magnet_length
     bending_magnet = BendingMagnet(radius=radius,
                                    magnetic_field=0.4)
+    srw_bending_magnet_setting = SRWBendingMagnetSetting()
+    srw_bending_magnet_setting.setAcceptanceAngle(horizontal_angle=0.1,
+                                                  vertical_angle=0.02)
+    bending_magnet.addSettings(srw_bending_magnet_setting)
 
     # Calculate the radiation.
     radiation = driver.calculateRadiation(electron_beam=ESRFStorageRing(),
