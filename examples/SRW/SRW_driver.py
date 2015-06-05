@@ -43,7 +43,7 @@ class SRWDriver(AbstractDriver):
         if isinstance(radiation_source, Undulator):
             undulator = radiation_source
 
-            magFldCnt = srw_adapter.magnetFieldFromUndulator(undulator)
+            srw_undulator = srw_adapter.magnetFieldFromUndulator(undulator)
             max_theta = undulator.gaussianCentralConeDivergence(electron_beam.gamma()) * 2.5
 
             z_start = undulator.length()+position_first_component.z()
@@ -63,11 +63,9 @@ class SRWDriver(AbstractDriver):
             else:
                 undulator_settings = SRWUndulatorSetting()
 
-            srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, undulator_settings.toList())
+            srwl.CalcElecFieldSR(wavefront, 0, srw_undulator, undulator_settings.toList())
         elif isinstance(radiation_source, BendingMagnet):
             bending_magnet = radiation_source
-
-            magFldCnt = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet)
 
             # Use custom settings if present. Otherwise use default SRW settings.
             if bending_magnet.hasSettings(self):
@@ -75,31 +73,36 @@ class SRWDriver(AbstractDriver):
             else:
                 bending_magnet_settings = SRWBendingMagnetSetting()
 
+            magnetic_length = bending_magnet_settings.magnetic_length()
+            srw_bending_magnet = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet, magnetic_length)
+
             # Determine position of first optical element to calculate initial wavefront there.
             z_start = position_first_component.z()
 
             # Determine acceptances.
             # Horizontal
-            horizontal_angle =  bending_magnet_settings.horizontalAcceptanceAngle()
+            horizontal_angle =  bending_magnet_settings.horizontal_acceptance_angle()
             horizontal_grid_length = 0.5*horizontal_angle*z_start
 
             # Vertical
-            vertical_angle = bending_magnet_settings.verticalAcceptanceAngle()
+            vertical_angle = bending_magnet_settings.vertical_acceptance_angle()
             vertical_grid_length = 0.5*vertical_angle*z_start
 
             # Determine energy of the radiation.
-            energy = bending_magnet.energy()
+            energy_min = bending_magnet_settings.energy_min()
+            energy_max = bending_magnet_settings.energy_max()
 
             # Create rectangular SRW wavefront.
-            wavefront = srw_adapter.createRectangularSRWWavefrontSingleEnergy(grid_size=10,
-                                                                              grid_length_vertical=horizontal_grid_length,
-                                                                              grid_length_horizontal=vertical_grid_length,
-                                                                              z_start=z_start,
-                                                                              srw_electron_beam=srw_electron_beam,
-                                                                              energy=energy)
+            wavefront = srw_adapter.createRectangularSRWWavefront(grid_size=10,
+                                                                  grid_length_vertical=horizontal_grid_length,
+                                                                  grid_length_horizontal=vertical_grid_length,
+                                                                  z_start=z_start,
+                                                                  srw_electron_beam=srw_electron_beam,
+                                                                  energy_min=energy_min,
+                                                                  energy_max=energy_max)
 
             # Calculate initial wavefront.
-            srwl.CalcElecFieldSR(wavefront, 0, magFldCnt, bending_magnet_settings.toList())
+            srwl.CalcElecFieldSR(wavefront, 0, srw_bending_magnet, bending_magnet_settings.to_list())
         else:
             raise NotImplementedError
 

@@ -26,6 +26,8 @@ class ShadowBendingMagnet(ShadowSource):
         src.NCOL=0
         src.N_COLOR=0
         src.POL_DEG=0.0
+
+        #TODO: not needed?
         src.SIGDIX=0.0
         src.SIGDIZ=0.0
         src.SIGMAY=0.0
@@ -36,36 +38,37 @@ class ShadowBendingMagnet(ShadowSource):
         src.F_OPD = 1
         src.F_SR_TYPE = 0
 
+
         from examples.shadow.driver.shadow_driver import ShadowDriver
         settings = self._bending_magnet.settings(ShadowDriver())
 
         # NOTE: photon energy is set on bending magnet.
         # Energy is sync to settings object to avoid possible side effects - if any possible.
-        settings._e_min = self._bending_magnet.energy()
-        settings._e_max = self._bending_magnet.energy()
+        # settings._e_min = self._bending_magnet.energy()
+        # settings._e_max = self._bending_magnet.energy()
 
         src.NPOINT = settings._number_of_rays
         src.ISTAR1 = settings._seed
         src.PH1 = settings._e_min
         src.PH2 = settings._e_max
         src.F_POL = 1 + settings._generate_polarization
+
+        #TODO: this will come from electron beam
         src.SIGMAX = settings._sigma_x
         src.SIGMAZ = settings._sigma_z
         src.EPSI_X = settings._emittance_x
         src.EPSI_Z = settings._emittance_z
-
-        # Energy is stored in ElectronBeam
-        src.BENER = self._electron_beam._energy
-
         src.EPSI_DX = settings._distance_from_waist_x
         src.EPSI_DZ = settings._distance_from_waist_z
 
-        # Radius is stored in BendingMagnet
-        src.R_MAGNET  = self._bending_magnet.radius()
-        src.R_ALADDIN = self._bending_magnet.radius() * 100
+        # Energy is stored in ElectronBeam
+        src.BENER = self._electron_beam._energy_in_GeV
 
-        src.HDIV1 = settings._horizontal_half_divergence_from
-        src.HDIV2 = settings._horizontal_half_divergence_to
+        src.R_ALADDIN = -2501.0459 # physical radius in cm
+        src.R_MAGNET = 3.334728*self._electron_beam._energy_in_GeV/self._bending_magnet._magnetic_field # magnetic radius in m
+
+        src.HDIV1 = 0.5*self._bending_magnet._length/self._bending_magnet._radius # 0.0500000007
+        src.HDIV2 = 0.5*self._bending_magnet._length/self._bending_magnet._radius  # 0.0500000007
         src.VDIV1 = settings._max_vertical_half_divergence_from
         src.VDIV2 = settings._max_vertical_half_divergence_to
         src.FDISTR = 4 + 2 * settings._calculation_mode
@@ -73,8 +76,10 @@ class ShadowBendingMagnet(ShadowSource):
         src.FILE_BOUND = bytes(settings._optimize_file_name, 'utf-8')
         src.NTOTALPOINT = settings._max_number_of_rejected_rays
 
+
         return src
 
+    #TODO remove this method? What's the interest? Do not set glossary objects from here...
     def fromNativeShadowSource(self, src):
         from examples.shadow.driver.shadow_driver import ShadowDriver
         settings = self._bending_magnet.settings(ShadowDriver())
@@ -87,18 +92,20 @@ class ShadowBendingMagnet(ShadowSource):
         settings._sample_distribution=src.F_SR_TYPE
         settings._generate_polarization=src.F_POL-1
 
+        #TODO: belongs to ElectronBeam
         settings._sigma_x=src.SIGMAX
         settings._sigma_z=src.SIGMAZ
         settings._emittance_x=src.EPSI_X
         settings._emittance_z=src.EPSI_Z
 
         # TODO: belongs to ElectronBeam
-        #settings._energy=src.BENER
+        settings._energy=src.BENER
         settings._distance_from_waist_x=src.EPSI_DX
         settings._distance_from_waist_z=src.EPSI_DZ
 
         # TODO: belongs to BendingMagnet
         #settings._magnetic_radius=src.R_MAGNET
+
         settings._horizontal_half_divergence_from=src.HDIV1
         settings._horizontal_half_divergence_to=src.HDIV2
         settings._max_vertical_half_divergence_from=src.VDIV1
@@ -125,12 +132,15 @@ class ShadowBendingMagnetSetting(AbstractDriverSetting):
         self._e_min = 5000
         self._e_max = 100000
         self._generate_polarization = 2
-        self._sigma_x = 0.0078
-        self._sigma_z = 0.0036
-        self._emittance_x = 3.8E-7
-        self._emittance_z = 3.8E-9
+
+        #TODO:  belongs to ElectronBeam
+        self._sigma_x = 0.0 #0.0078
+        self._sigma_z = 0.0 #0.0036
+        self._emittance_x = 0.0 #3.8E-7
+        self._emittance_z = 0.0 #3.8E-9
         self._distance_from_waist_x = 0.0
         self._distance_from_waist_z = 0.0
+
         self._horizontal_half_divergence_from = 0.0005
         self._horizontal_half_divergence_to = 0.0005
         self._max_vertical_half_divergence_from = 1.0

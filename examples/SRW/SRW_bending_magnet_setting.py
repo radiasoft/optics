@@ -25,7 +25,7 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
         self._horizontal_acceptance_angle = 0.1
         self._vertical_acceptance_angle   = 0.01
 
-    def toList(self):
+    def to_list(self):
         precision_parameter = [self._meth,
                                self._relPrec,
                                self._zStartInteg,
@@ -36,12 +36,30 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
 
         return precision_parameter
 
-    def setAcceptanceAngle(self, horizontal_angle, vertical_angle):
+    def set_acceptance_angle(self, horizontal_angle, vertical_angle):
         self._horizontal_acceptance_angle = horizontal_angle
         self._vertical_acceptance_angle   = vertical_angle
 
-    def horizontalAcceptanceAngle(self):
+    def horizontal_acceptance_angle(self):
         return self._horizontal_acceptance_angle
 
-    def verticalAcceptanceAngle(self):
+    def vertical_acceptance_angle(self):
         return self._vertical_acceptance_angle
+
+    def set_energy_min(self, energy_min):
+        self._energy_min = energy_min
+
+    def energy_min(self):
+        return self._energy_min
+
+    def set_energy_max(self, energy_max):
+        self._energy_max = energy_max
+
+    def energy_max(self):
+        return self._energy_max
+
+    def set_magnetic_length(self, magnetic_length):
+        self._magnetic_length = magnetic_length
+
+    def magnetic_length(self):
+        return self._magnetic_length

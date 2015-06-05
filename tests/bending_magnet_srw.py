@@ -3,13 +3,19 @@ Example illustrating a possible implementation of "beamline components" / "a glo
 May need python3 to run.
 """
 from examples.SRW.SRW_driver import SRWDriver
+from examples.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
 from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 from optics.beam.electron_beam import ElectronBeam
-from optics.source.undulator_vertical import UndulatorVertical
+from optics.source.bending_magnet import BendingMagnet
+
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
+from optics.beamline.optical_elements.image_plane import ImagePlane
+
 from optics.beamline.beamline import Beamline
 from optics.beamline.beamline_position import BeamlinePosition
+
+
 
 ###################################################################################################
 # Stage 1: abstract definition of the setting (electron beam, radiation source, beamline)
@@ -22,24 +28,6 @@ from optics.beamline.beamline_position import BeamlinePosition
 ###################################################################################################
 
 
-# Define the electron beam of the machine (totally generic in this example)
-class ESRFStorageRing(ElectronBeam):
-    def __init__(self):
-        ElectronBeam.__init__(self,
-                              energy_in_GeV=6.04,
-                              energy_spread=0.06,
-                              average_current=0.2,
-                              electrons=10**9)
-
-
-# Define the radiation source - here an undulator (totally generic in this example)
-class Undulator35(UndulatorVertical):
-    def __init__(self):
-        UndulatorVertical.__init__(self,
-                                   K=1.87,
-                                   period_length=0.035,
-                                   periods_number=56)
-
 # Define a beamline (generic + SRW specific settings)
 class ID1234(Beamline):
     def __init__(self):
@@ -48,10 +36,10 @@ class ID1234(Beamline):
         # Create a beamline that only has one lens attached.
         # First create the lens.
         lens=LensIdeal("focus lens",
-                       focal_x=1.0,
-                       focal_y=1.0)
+                       focal_x=2.5,
+                       focal_y=2.5)
         # Specify the position of the lens (could set extra parameters for: off-axis and inclination)
-        lens_position = BeamlinePosition(1.0)
+        lens_position = BeamlinePosition(5.0)
 
         # Set settings for SRW.
         # These are settings that depend on the "driver" to use.
@@ -72,21 +60,9 @@ class ID1234(Beamline):
         # Attach the component at its position to the beamline.
         self.attachComponentAt(lens, lens_position)
 
-
-###################################################################################################
-# Stage 2: attach settings to a generic beamline in case it was not done in stage 1 already.
-###################################################################################################
-# We could also add shadow and/or srw settings later.
-#beamline = ID1234()
-#focus_lens = beamline.componentByName("focus lens")
-#lens_setting = SRWBeamlineComponentSetting()
-#lens_setting.setResizeResolutionHorizontal(5.0)
-#focus_lens.setSettings(lens_setting)
-
-# Personally I like more to set up everything in one place, i.e. to set up everything in stage 1.
-# However, one could take a SRW configured beamline and add quickly the necessary
-# shadow settings without change the original script.
-
+        # Attach a screen/image plane.
+        plane_position = BeamlinePosition(10.0)
+        self.attachComponentAt(ImagePlane("Image screen"), plane_position)
 
 
 ###################################################################################################
@@ -95,21 +71,51 @@ class ID1234(Beamline):
 
 def test_conformance1():
     # Specify to use SRW.
-    # In case of shadow use SHADOWDriver().
-    # This would be the only line to change - if sufficiently configured for shadow as well.
     driver = SRWDriver()
 
+    electron_beam = ElectronBeam(energy_in_GeV=3.0,energy_spread=0.01,average_current=0.5,electrons_per_bunch=1)
+    bending_magnet = BendingMagnet(radius=2.25,magnetic_field=0.4,length=2.25*0.100)
+
+
+    # Attach SRW bending magnet settings.
+    # NOTE: Maybe angular acceptance is generic and should move to BendingMagnet or Source class??
+    srw_bending_magnet_setting = SRWBendingMagnetSetting()
+    srw_bending_magnet_setting.set_acceptance_angle(horizontal_angle=0.1,
+                                                    vertical_angle=0.02)
+    energy = 0.5*0.123984
+    srw_bending_magnet_setting.set_energy_min(energy)
+    srw_bending_magnet_setting.set_energy_max(energy)
+    srw_bending_magnet_setting.set_magnetic_length(4.0)
+    bending_magnet.addSettings(srw_bending_magnet_setting)
+
     # Calculate the radiation.
-    radiation = driver.calculateRadiation(electron_beam=ESRFStorageRing(),
-                                          radiation_source=Undulator35(),
+    radiation = driver.calculateRadiation(electron_beam=electron_beam,
+                                          radiation_source=bending_magnet,
                                           beamline=ID1234())
+    plot_method = 0 # 0=Oleg, 1=Mark
+    if plot_method == 1:
+        #plot image plane
+        import copy
+        import uti_plot #required for plotting
+        import srwlib
+        mesh1 = copy.deepcopy(radiation.mesh)
+        arI1s = srwlib.array('f', [0]*mesh1.nx*mesh1.ny) #"Flat" array to take 2D single-electron intensity data (vs X & Y)
+        srwlib.srwl.CalcIntFromElecField(arI1s, radiation, 6, 0, 3, mesh1.eStart, 0, 0) #Extracting single-electron intensity vs X & Y
+        unitsInPlot = ['m', 'm', 'ph/s/.1%bw/mm^2']
+        uti_plot.uti_plot2d1d(arI1s, [mesh1.xStart, mesh1.xFin, mesh1.nx], [mesh1.yStart, mesh1.yFin, mesh1.ny], labels=('Horizontal position', 'Vertical position', 'Single-E Intensity in Image Plane'), units=unitsInPlot)
+        uti_plot.uti_plot_show() #show all graphs (blocks script execution; close all graph windows to proceed)
+    else:
+        # Calculate intensity.
+        intensity, dim_x,dim_y = driver.calculateIntensity(radiation)
+        # Calculate phases.
+        phase = driver.calculatePhase(radiation)
+        assert abs(1.7063003e+09 - intensity[10, 10])<1e+6, \
+            'Quick verification of intensity value'
 
-    # Calculate intensity.
-    intensity = driver.calculateIntensity(radiation)
-    # Calculate phases.
-    phase = driver.calculatePhase(radiation)
-    assert abs(7.770526e+14 - intensity[0][10,10])< 1e+7, \
-        'Quick verification of intensity value'
+        import matplotlib.pyplot as plt
+        plt.pcolormesh(dim_x,dim_y,intensity.transpose())
+        plt.colorbar()
+        plt.show()
 
-    #print(intensity)
-    #print(phase)
+if __name__ == "__main__":
+    test_conformance1()

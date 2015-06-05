@@ -47,5 +47,25 @@ class Beamline(object):
 
         return None
 
+    def nextComponent(self, component):
+        component_index = self._components.index(component)
+
+        if len(self._components) <= component_index+1:
+            next_component = None
+        else:
+            next_component = self._components[component_index+1]
+
+        return next_component
+
+    def previousComponent(self, component):
+        component_index = self._components.index(component)
+
+        if component_index == 0:
+            previous_component = None
+        else:
+            previous_component = self._components[component_index-1]
+
+        return previous_component
+
     def __iter__(self):
         return iter(self._components)
