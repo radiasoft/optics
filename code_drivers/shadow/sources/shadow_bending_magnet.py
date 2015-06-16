@@ -5,7 +5,7 @@ import Shadow
 import numpy
 
 from optics.driver.abstract_driver_setting import AbstractDriverSetting
-from examples.shadow.sources.shadow_source import ShadowSource
+from code_drivers.shadow.sources.shadow_source import ShadowSource
 
 class ShadowBendingMagnet(ShadowSource):
     def __init__(self, electron_beam, bending_magnet):
@@ -40,7 +40,7 @@ class ShadowBendingMagnet(ShadowSource):
         src.F_SR_TYPE = 0
 
 
-        from examples.shadow.driver.shadow_driver import ShadowDriver
+        from code_drivers.shadow.driver.shadow_driver import ShadowDriver
         settings = self._bending_magnet.settings(ShadowDriver())
 
         # NOTE: photon energy is set on bending magnet.
@@ -82,7 +82,7 @@ class ShadowBendingMagnet(ShadowSource):
 
     #TODO remove this method? What's the interest? Do not set glossary objects from here...
     def fromNativeShadowSource(self, src):
-        from examples.shadow.driver.shadow_driver import ShadowDriver
+        from code_drivers.shadow.driver.shadow_driver import ShadowDriver
         settings = self._bending_magnet.settings(ShadowDriver())
 
         settings._number_of_rays=src.NPOINT
@@ -124,7 +124,7 @@ class ShadowBendingMagnet(ShadowSource):
 
 class ShadowBendingMagnetSetting(AbstractDriverSetting):
     def __init__(self):
-        from examples.shadow.driver.shadow_driver import ShadowDriver
+        from code_drivers.shadow.driver.shadow_driver import ShadowDriver
         AbstractDriverSetting.__init__(self,
                                        driver=ShadowDriver())
 

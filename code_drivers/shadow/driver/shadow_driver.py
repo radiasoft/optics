@@ -10,8 +10,8 @@ from optics.beamline.beamline_position import BeamlinePosition
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 from optics.beamline.optical_elements.image_plane import ImagePlane
 
-from examples.shadow.driver.shadow_beam import ShadowBeam
-from examples.shadow.sources.shadow_bending_magnet import ShadowBendingMagnet, ShadowBendingMagnetSetting
+from code_drivers.shadow.driver.shadow_beam import ShadowBeam
+from code_drivers.shadow.sources.shadow_bending_magnet import ShadowBendingMagnet, ShadowBendingMagnetSetting
 
 
 class ShadowDriver(AbstractDriver):

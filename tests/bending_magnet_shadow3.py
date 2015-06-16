@@ -15,8 +15,8 @@ from optics.beamline.beamline import Beamline
 from optics.beamline.beamline_position import BeamlinePosition
 
 #import Shadow driver and particular settings of the glossary elements used
-from examples.shadow.driver.shadow_driver import ShadowDriver
-from examples.shadow.sources.shadow_bending_magnet import ShadowBendingMagnetSetting
+from code_drivers.shadow.driver.shadow_driver import ShadowDriver
+from code_drivers.shadow.sources.shadow_bending_magnet import ShadowBendingMagnetSetting
 
 
 ###################################################################################################

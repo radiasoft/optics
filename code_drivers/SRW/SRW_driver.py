@@ -11,10 +11,10 @@ from optics.source.bending_magnet import BendingMagnet
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 from optics.beamline.optical_elements.image_plane import ImagePlane
 
-from examples.SRW.SRW_adapter import SRWAdapter
-from examples.SRW.SRW_undulator_setting import SRWUndulatorSetting
-from examples.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
-from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
+from code_drivers.SRW.SRW_adapter import SRWAdapter
+from code_drivers.SRW.SRW_undulator_setting import SRWUndulatorSetting
+from code_drivers.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
+from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 class SRWDriver(AbstractDriver):
 

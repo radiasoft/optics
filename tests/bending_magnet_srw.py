@@ -13,9 +13,9 @@ from optics.beamline.beamline import Beamline
 from optics.beamline.beamline_position import BeamlinePosition
 
 #import Shadow driver and particular settings of the glossary elements used
-from examples.SRW.SRW_driver import SRWDriver
-from examples.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
-from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
+from code_drivers.SRW.SRW_driver import SRWDriver
+from code_drivers.SRW.SRW_bending_magnet_setting import SRWBendingMagnetSetting
+from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSetting
 
 
 ###################################################################################################
