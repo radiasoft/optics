@@ -1,7 +1,7 @@
 """
 Minimal implementation of a SRW driver.
 """
-import numpy as np
+
 from srwlib import *
 
 from optics.driver.abstract_driver import AbstractDriver
@@ -18,12 +18,12 @@ from examples.SRW.SRW_beamline_component_setting import SRWBeamlineComponentSett
 
 class SRWDriver(AbstractDriver):
 
-    def calculateRadiation(self,electron_beam, radiation_source, beamline):
+    def calculateRadiation(self,electron_beam, magnetic_structure, beamline):
         """
         Calculates radiation.
 
         :param electron_beam: ElectronBeam object
-        :param radiation_source: Source object
+        :param magnetic_structure: Source object
         :param beamline: beamline object
         :return: SRW wavefront.
         """
@@ -40,8 +40,8 @@ class SRWDriver(AbstractDriver):
         # Calculate the source radiation depending on the chosen source.
         # Only undulator here.
         # In the real driver this should be refactored to separate functions.
-        if isinstance(radiation_source, Undulator):
-            undulator = radiation_source
+        if isinstance(magnetic_structure, Undulator):
+            undulator = magnetic_structure
 
             srw_undulator = srw_adapter.magnetFieldFromUndulator(undulator)
             max_theta = undulator.gaussianCentralConeDivergence(electron_beam.gamma()) * 2.5
@@ -64,8 +64,8 @@ class SRWDriver(AbstractDriver):
                 undulator_settings = SRWUndulatorSetting()
 
             srwl.CalcElecFieldSR(wavefront, 0, srw_undulator, undulator_settings.toList())
-        elif isinstance(radiation_source, BendingMagnet):
-            bending_magnet = radiation_source
+        elif isinstance(magnetic_structure, BendingMagnet):
+            bending_magnet = magnetic_structure
 
             # Use custom settings if present. Otherwise use default SRW settings.
             if bending_magnet.hasSettings(self):

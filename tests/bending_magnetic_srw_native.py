@@ -29,6 +29,10 @@ def bending_magnet_srw_raw_run():
     #***********Bending Magnet
     B = 0.4 #Dipole magnetic field [T]
     LeffBM = 4. #Magnet length [T] (exaggerated, to skip eventual "edge radiation")
+
+    #changed srio@esrf.eu to match BM length from divergence and magnetic radius
+    #LeffBM = 0.1 * (3.3 * 3.3**2 * 0.4)
+
     BM = SRWLMagFldM(B, 1, 'n', LeffBM)
     magFldCnt = SRWLMagFldC([BM], array('d',[0]), array('d',[0]), array('d',[0])) #Container of magnetic field elements and their positions in 3D
 
@@ -153,7 +157,7 @@ def bending_magnet_srw_raw_run():
 #     uti_plot_show() #show all graphs (blocks script execution; close all graph windows to proceed)
 
 
-def test_srw_raw():
+def test_bending_magnet_srw_native():
     #calculate the wavefront for a single electron
     wfr = bending_magnet_srw_raw_run()
     #plot image plane
@@ -165,3 +169,6 @@ def test_srw_raw():
     uti_plot_show() #show all graphs (blocks script execution; close all graph windows to proceed)
 
 
+
+if __name__ == "__main__":
+    test_bending_magnet_srw_native()

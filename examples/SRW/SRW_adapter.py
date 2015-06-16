@@ -10,14 +10,23 @@ class SRWAdapter:
         Translate generic electron beam to srw "electron beam".
         """
         srw_electron_beam = SRWLPartBeam()
-        srw_electron_beam.Iavg = electron_beam.average_current()
-        srw_electron_beam.partStatMom1.x = electron_beam.x()
-        srw_electron_beam.partStatMom1.y = electron_beam.y()
+        srw_electron_beam.Iavg = electron_beam._current
+        srw_electron_beam.partStatMom1.x = 0.0
+        srw_electron_beam.partStatMom1.y = 0.0
 
         srw_electron_beam.partStatMom1.z = 0
         srw_electron_beam.partStatMom1.xp = 0
         srw_electron_beam.partStatMom1.yp = 0
         srw_electron_beam.partStatMom1.gamma = electron_beam.gamma()
+
+        #2nd order statistical moments:
+        srw_electron_beam.arStatMom2[0] = electron_beam._moment_xx   # <(x-x0)^2> [m^2]
+        srw_electron_beam.arStatMom2[1] = electron_beam._moment_xxp  # <(x-x0)*(x'-x'0)> [m]
+        srw_electron_beam.arStatMom2[2] = electron_beam._moment_xpxp # <(x'-x'0)^2>
+        srw_electron_beam.arStatMom2[3] = electron_beam._moment_yy   #<(y-y0)^2>
+        srw_electron_beam.arStatMom2[4] = electron_beam._moment_yyp  #<(y-y0)*(y'-y'0)> [m]
+        srw_electron_beam.arStatMom2[5] = electron_beam._moment_ypyp #<(y'-y'0)^2>
+        srw_electron_beam.arStatMom2[10] = electron_beam._energy_spread #<(E-E0)^2>/E0^2
 
         return srw_electron_beam
 

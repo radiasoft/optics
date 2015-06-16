@@ -1,11 +1,11 @@
 #
-# Python script to run shadow3. Created automatically with mk_script.py.
+# Python script to run shadow3. Modified from output of Shadow.ShadowTools.make_python_script_from_current_run()
 #
 import Shadow
 import pytest
 import os
 
-def bending_magnet_shadow3_raw_run():
+def bending_magnet_shadow3_native_run():
 
     # write (1) or not (0) SHADOW files start.xx end.xx star.xx
     iwrite = 0
@@ -84,12 +84,12 @@ def bending_magnet_shadow3_raw_run():
 
     return beam
 
-def test_shadow3_raw():
-    beam = bending_magnet_shadow3_raw_run()
+def test_bending_magnet_shadow3_native():
+    shadow_beam = bending_magnet_shadow3_native_run()
 
-    Shadow.ShadowTools.plotxy(beam,1,3,nbins=101,title="Real space")
-    Shadow.ShadowTools.plotxy(beam,1,4,nbins=101,title="Phase space X")
-    Shadow.ShadowTools.plotxy(beam,3,6,nbins=101,title="Phase space Z")
+    Shadow.ShadowTools.plotxy(shadow_beam,1,3,nbins=101,title="Real space")
+    Shadow.ShadowTools.plotxy(shadow_beam,1,4,nbins=101,title="Phase space X")
+    Shadow.ShadowTools.plotxy(shadow_beam,3,6,nbins=101,title="Phase space Z")
 
     os.remove("effic.01")
     os.remove("mirr.01")
@@ -102,5 +102,8 @@ def test_shadow3_raw():
     os.remove("STOT00000")
 
 
+
+if __name__ == "__main__":
+    test_bending_magnet_shadow3_native()
 
     
