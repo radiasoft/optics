@@ -82,7 +82,7 @@ def test_bending_magnet_srw():
     #
     # 2) define the magnetic structure
     #
-    bending_magnet = BendingMagnet(radius=2.25,magnetic_field=0.4,length=2.25*0.100)
+    bending_magnet = BendingMagnet(radius=2.25,magnetic_field=0.4,length=4.0)
 
 
     # Attach SRW bending magnet settings.
@@ -94,7 +94,6 @@ def test_bending_magnet_srw():
     energy = 0.5*0.123984
     srw_bending_magnet_setting.set_energy_min(energy)
     srw_bending_magnet_setting.set_energy_max(energy)
-    srw_bending_magnet_setting.set_magnetic_length(4.0)
     bending_magnet.addSettings(srw_bending_magnet_setting)
 
     #

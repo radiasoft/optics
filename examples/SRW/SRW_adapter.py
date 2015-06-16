@@ -61,24 +61,24 @@ class SRWAdapter:
 
         return magnetic_fields
 
-    # TODO: Do right determination of magnet length
-    def SRWBendingMagnet(self, bending_magnet, magnetic_length):
+    def SRWBendingMagnet(self, bending_magnet):
         """
         Translate generic bending magnet to srw "multipole magnet".
         """
         magnetic_fields = []
 
-        B = bending_magnet.magnetic_field()
+        B = bending_magnet._magnetic_field
+        length = bending_magnet._length
 
-        srw_bending_magnet = SRWLMagFldM(B, 1, 'n', magnetic_length)
+        srw_bending_magnet = SRWLMagFldM(B, 1, 'n', length)
 
         return srw_bending_magnet
 
-    def magnetFieldFromBendingMagnet(self, bending_magnet, magnetic_length):
+    def magnetFieldFromBendingMagnet(self, bending_magnet):
         """
         Generate srw magnetic fields.
         """
-        srw_bending_magnet = self.SRWBendingMagnet(bending_magnet, magnetic_length)
+        srw_bending_magnet = self.SRWBendingMagnet(bending_magnet)
 
         magnetic_fields = SRWLMagFldC([srw_bending_magnet],
                                       array('d', [0]), array('d', [0]), array('d', [0]))

@@ -57,9 +57,3 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
 
     def energy_max(self):
         return self._energy_max
-
-    def set_magnetic_length(self, magnetic_length):
-        self._magnetic_length = magnetic_length
-
-    def magnetic_length(self):
-        return self._magnetic_length

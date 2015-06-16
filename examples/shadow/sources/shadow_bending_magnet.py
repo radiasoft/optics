@@ -2,6 +2,7 @@ __author__ = 'labx'
 
 
 import Shadow
+import numpy
 
 from optics.driver.abstract_driver_setting import AbstractDriverSetting
 from examples.shadow.sources.shadow_source import ShadowSource
@@ -54,18 +55,18 @@ class ShadowBendingMagnet(ShadowSource):
         src.F_POL = 1 + settings._generate_polarization
 
         #TODO: this will come from electron beam
-        src.SIGMAX = settings._sigma_x
-        src.SIGMAZ = settings._sigma_z
-        src.EPSI_X = settings._emittance_x
-        src.EPSI_Z = settings._emittance_z
+        src.SIGMAX = 100.0*numpy.sqrt(self._electron_beam._moment_xx) #  settings._sigma_x
+        src.SIGMAZ = 100.0*numpy.sqrt(self._electron_beam._moment_yy) # settings._sigma_z
+        src.EPSI_X = 100.0*numpy.sqrt(self._electron_beam._moment_xx)*numpy.sqrt(self._electron_beam._moment_xpxp)
+        src.EPSI_Z = 100.0*numpy.sqrt(self._electron_beam._moment_yy)*numpy.sqrt(self._electron_beam._moment_ypyp)
         src.EPSI_DX = settings._distance_from_waist_x
         src.EPSI_DZ = settings._distance_from_waist_z
 
         # Energy is stored in ElectronBeam
         src.BENER = self._electron_beam._energy_in_GeV
 
-        src.R_ALADDIN = -2501.0459 # physical radius in cm
-        src.R_MAGNET = 3.334728*self._electron_beam._energy_in_GeV/self._bending_magnet._magnetic_field # magnetic radius in m
+        src.R_ALADDIN = -100*self._bending_magnet._radius # -2501.0459 # physical radius in cm
+        src.R_MAGNET = self._bending_magnet._radius  # 3.334728*self._electron_beam._energy_in_GeV/self._bending_magnet._magnetic_field # magnetic radius in m
 
         src.HDIV1 = 0.5*self._bending_magnet._length/self._bending_magnet._radius # 0.0500000007
         src.HDIV2 = 0.5*self._bending_magnet._length/self._bending_magnet._radius  # 0.0500000007

@@ -73,8 +73,7 @@ class SRWDriver(AbstractDriver):
             else:
                 bending_magnet_settings = SRWBendingMagnetSetting()
 
-            magnetic_length = bending_magnet_settings.magnetic_length()
-            srw_bending_magnet = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet, magnetic_length)
+            srw_bending_magnet = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet)
 
             # Determine position of first optical element to calculate initial wavefront there.
             z_start = position_first_component.z()
