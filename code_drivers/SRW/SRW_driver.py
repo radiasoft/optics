@@ -6,6 +6,8 @@ from srwlib import *
 
 from optics.driver.abstract_driver import AbstractDriver
 
+from optics.beam.electron_beam_pencil import ElectronBeamPencil
+
 from optics.magnetic_structures.undulator import Undulator
 from optics.magnetic_structures.bending_magnet import BendingMagnet
 
@@ -149,6 +151,10 @@ class SRWDriver(AbstractDriver):
         # Call SRW to perform propagation.
         srwl.PropagElecField(wavefront, srw_beamline)
 
+
+        # TODO: Decoration of SRW wavefront with glossary object. Consider to better use a "driver results" object.
+        wavefront._electron_beam = deepcopy(electron_beam)
+
         return wavefront
 
     def calculateIntensity(self, radiation):
@@ -160,10 +166,19 @@ class SRWDriver(AbstractDriver):
         wavefront = radiation
         mesh = deepcopy(wavefront.mesh)
         intensity = array('f', [0]*mesh.nx*mesh.ny)
-        srwl.CalcIntFromElecField(intensity, wavefront, 6, 0, 3, mesh.eStart, 0, 0)
+
+        if isinstance(radiation._electron_beam, ElectronBeamPencil):
+            intensity_method = 0
+        else:
+            intensity_method = 1
+
+        srwl.CalcIntFromElecField(intensity, wavefront, 6, intensity_method, 3, mesh.eStart, 0, 0)
+
+
         dim_x = np.linspace(mesh.xStart, mesh.xFin, mesh.nx)
         dim_y = np.linspace(mesh.yStart, mesh.yFin, mesh.ny)
         intensity = np.array(intensity).reshape((mesh.ny,mesh.nx))
+
         return [intensity.transpose(), dim_x, dim_y]
 
     def calculatePhase(self, radiation):

@@ -4,6 +4,7 @@ Example of a bending magnet emitting in infrared region for a single electron em
 import numpy as np
 
 # Import elements from common Glossary
+from optics.beam.electron_beam import ElectronBeam
 from optics.beam.electron_beam_pencil import ElectronBeamPencil
 from optics.magnetic_structures.bending_magnet import BendingMagnet
 
@@ -69,13 +70,24 @@ from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponent
 #
 
 def test_bending_magnet_srw():
-    # Specify to use SRW.
-    driver = SRWDriver()
-
     #
     # 1) define first the electron beam
     #
+
+    # NOTE: Uncomment and change test.
+    # electron_beam = ElectronBeam(energy_in_GeV=3.0,
+    #                              energy_spread=(0.89e-03)**2,
+    #                              current=0.5,
+    #                              electrons_per_bunch=500,
+    #                              moment_xx=(127.346e-06)**2,
+    #                              moment_xxp=-10.85e-09,
+    #                              moment_xpxp=(92.3093e-06),
+    #                              moment_yy=(13.4164e-06)**2,
+    #                              moment_yyp=0.0072e-09,
+    #                              moment_ypyp=(0.8022e-06)**2)
+
     electron_beam = ElectronBeamPencil(energy_in_GeV=3.0,energy_spread=0.01,current=0.5)
+
 
     #
     # 2) define the magnetic structure
@@ -125,11 +137,13 @@ def test_bending_magnet_srw():
     beamline.attachComponentAt(ImagePlane("Image screen"), plane_position)
 
 
-
-
     #
     #  Calculate the radiation (i.e., run the codes). It returns a native SRWLWfr()
     #
+
+    # Specify to use SRW.
+    driver = SRWDriver()
+
     srw_wavefront = driver.calculateRadiation(electron_beam=electron_beam,
                                               magnetic_structure=bending_magnet,
                                               beamline=beamline,
@@ -140,13 +154,16 @@ def test_bending_magnet_srw():
     # extract the intensity
     #
     intensity, dim_x,dim_y = driver.calculateIntensity(srw_wavefront)
-    # Calculate phases.
-    phase = driver.calculatePhase(srw_wavefront)
 
     # Do some tests.
     assert abs(1.7063003e+09 - intensity[10, 10])<1e+6, \
         'Quick verification of intensity value'
 
+    # Calculate phases.
+    phase = driver.calculatePhase(srw_wavefront)
+
+
+    # Do some tests.
     checksum = np.sum( np.abs(srw_wavefront.arEx) ) + np.abs( np.sum(srw_wavefront.arEy) )
     assert np.abs(checksum - 1.1845644e+10) < 1e3, "Test electric field checksum"
 
