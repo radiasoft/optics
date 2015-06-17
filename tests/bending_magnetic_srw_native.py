@@ -160,6 +160,15 @@ def bending_magnet_srw_raw_run():
 def test_bending_magnet_srw_native():
     #calculate the wavefront for a single electron
     wfr = bending_magnet_srw_raw_run()
+
+    checksum = np.sum( np.abs(wfr.arEx) ) + np.abs( np.sum(wfr.arEy) )
+    assert np.abs(checksum - 1.1845644e+10) < 1e3, "Test electric field checksum"
+
+    return wfr
+
+if __name__ == "__main__":
+    wfr = test_bending_magnet_srw_native()
+
     #plot image plane
     mesh1 = deepcopy(wfr.mesh)
     arI1s = array('f', [0]*mesh1.nx*mesh1.ny) #"Flat" array to take 2D single-electron intensity data (vs X & Y)
@@ -167,8 +176,3 @@ def test_bending_magnet_srw_native():
     unitsInPlot = ['m', 'm', 'ph/s/.1%bw/mm^2']
     uti_plot2d1d(arI1s, [mesh1.xStart, mesh1.xFin, mesh1.nx], [mesh1.yStart, mesh1.yFin, mesh1.ny], labels=('Horizontal position', 'Vertical position', 'Single-E Intensity in Image Plane'), units=unitsInPlot)
     uti_plot_show() #show all graphs (blocks script execution; close all graph windows to proceed)
-
-
-
-if __name__ == "__main__":
-    test_bending_magnet_srw_native()

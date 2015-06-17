@@ -3,6 +3,7 @@ Example of a bending magnet emitting in infrared region for a single electron em
 """
 
 import os
+import numpy as np
 
 # Import elements from common Glossary
 from optics.beam.electron_beam_pencil import ElectronBeamPencil
@@ -18,47 +19,6 @@ from optics.beamline.beamline_position import BeamlinePosition
 from code_drivers.shadow.driver.shadow_driver import ShadowDriver
 from code_drivers.shadow.sources.shadow_bending_magnet import ShadowBendingMagnetSetting
 
-
-###################################################################################################
-# Stage 1: abstract definition of the setting (electron beam, radiation source, beamline)
-# We want to put everything in generic classes that is independent of a specific implementation.
-# These are basically the information a scientist would need to physically build the beamline.
-#
-# Clearly we need extra information/settings to perform a calculation. And the extra settings
-# vary for different programs. We provide these extra information by attaching program depended
-# "settings".
-###################################################################################################
-# # Define a beamline (generic + SRW specific settings)
-# class ID1234(Beamline):
-#     def __init__(self):
-#         Beamline.__init__(self)
-#
-#         # Create a beamline that only has one lens attached.
-#         # First create the lens.
-#         lens=LensIdeal("focus lens",
-#                        focal_x=2.5,
-#                        focal_y=2.5)
-#         # Specify the position of the lens (could set extra parameters for: off-axis and inclination)
-#         lens_position = BeamlinePosition(5.0)
-#
-#         # Attach the component at its position to the beamline.
-#         self.attachComponentAt(lens, lens_position)
-#
-#         # Attach a screen/image plane.
-#         plane_position = BeamlinePosition(10.0)
-#         self.attachComponentAt(ImagePlane("Image screen"), plane_position)
-
-
-###################################################################################################
-# Stage 3: calculate the radiation
-###################################################################################################
-
-
-# def minimal_plot(shadow_beam):
-#     driver = ShadowDriver()
-#     int_grid, dim_x,dim_y = driver.calculateIntensity(shadow_beam)
-#     plt.pcolormesh(dim_x,dim_y,int_grid)
-#     plt.colorbar()
 
 def test_bending_magnet_shadow3():
     # Specify to use Shadow
@@ -121,12 +81,6 @@ def test_bending_magnet_shadow3():
     #
     intensity,dim_x,dim_y = driver.calculateIntensity(shadow_beam)
 
-
-    import matplotlib.pyplot as plt
-    plt.pcolormesh(dim_x,dim_y,intensity.transpose())
-    plt.colorbar()
-    plt.show()
-
     # clean temporary shadow files
     os.remove("effic.01")
     os.remove("mirr.01")
@@ -138,6 +92,19 @@ def test_bending_magnet_shadow3():
     os.remove("SPAR00000")
     os.remove("STOT00000")
 
+    # Do some tests
+    # Shadow results are random. But test at least that it really run
+    assert shadow_beam._beam.rays.shape == (26000, 18), "Test shadow beam shape"
+    assert np.sum(np.abs(shadow_beam._beam.rays[:,7])) > 1, "Test E field not zero"
+
+    return dim_x, dim_y, intensity
+
 
 if __name__ == "__main__":
-    test_bending_magnet_shadow3()
+    dim_x, dim_y, intensity = test_bending_magnet_shadow3()
+
+    # Plot if not called from test suite.
+    import matplotlib.pyplot as plt
+    plt.pcolormesh(dim_x,dim_y,intensity.transpose())
+    plt.colorbar()
+    plt.show()

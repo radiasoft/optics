@@ -1,6 +1,7 @@
 """
 Example of a bending magnet emitting in infrared region for a single electron emission
 """
+import numpy as np
 
 # Import elements from common Glossary
 from optics.beam.electron_beam_pencil import ElectronBeamPencil
@@ -66,9 +67,6 @@ from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponent
 #         self.attachComponentAt(ImagePlane("Image screen"), plane_position)
 #
 #
-# ###################################################################################################
-# # Stage 3: calculate the radiation
-# ###################################################################################################
 
 def test_bending_magnet_srw():
     # Specify to use SRW.
@@ -139,18 +137,25 @@ def test_bending_magnet_srw():
                                               beamline=beamline)
 
     #
-    # extract and plot the intensity
+    # extract the intensity
     #
     intensity, dim_x,dim_y = driver.calculateIntensity(srw_wavefront)
     # Calculate phases.
     phase = driver.calculatePhase(srw_wavefront)
+
+    # Do some tests.
     assert abs(1.7063003e+09 - intensity[10, 10])<1e+6, \
         'Quick verification of intensity value'
+
+    checksum = np.sum( np.abs(srw_wavefront.arEx) ) + np.abs( np.sum(srw_wavefront.arEy) )
+    assert np.abs(checksum - 1.1845644e+10) < 1e3, "Test electric field checksum"
+
+    return dim_x, dim_y, intensity
+
+if __name__ == "__main__":
+    dim_x, dim_y, intensity = test_bending_magnet_srw()
 
     import matplotlib.pyplot as plt
     plt.pcolormesh(dim_x,dim_y,intensity.transpose())
     plt.colorbar()
     plt.show()
-
-if __name__ == "__main__":
-    test_bending_magnet_srw()

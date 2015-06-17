@@ -1,9 +1,11 @@
 #
 # Python script to run shadow3. Modified from output of Shadow.ShadowTools.make_python_script_from_current_run()
 #
+import os
+import numpy as np
+
 import Shadow
 import pytest
-import os
 
 def bending_magnet_esrf_shadow3_native_run():
 
@@ -90,10 +92,6 @@ def bending_magnet_esrf_shadow3_native_run():
 def test_bending_magnet_esrf_shadow3_native():
     shadow_beam = bending_magnet_esrf_shadow3_native_run()
 
-    Shadow.ShadowTools.plotxy(shadow_beam,1,3,nbins=101,title="Real space")
-    Shadow.ShadowTools.plotxy(shadow_beam,1,4,nbins=101,title="Phase space X")
-    Shadow.ShadowTools.plotxy(shadow_beam,3,6,nbins=101,title="Phase space Z")
-
     os.remove("effic.01")
     os.remove("mirr.01")
     os.remove("rmir.01")
@@ -104,9 +102,18 @@ def test_bending_magnet_esrf_shadow3_native():
     os.remove("SPAR15000")
     os.remove("STOT15000")
 
+    # Do some tests.
+    # Shadow results are random. But test at least that it really run.
+    assert shadow_beam.rays.shape == (26000, 18), "Test shadow beam shape"
+    assert np.sum(np.abs(shadow_beam.rays[:,7])) > 1, "Test E field not zero"
 
+    return shadow_beam
 
 if __name__ == "__main__":
-    test_bending_magnet_esrf_shadow3_native()
+    shadow_beam = test_bending_magnet_esrf_shadow3_native()
+
+    Shadow.ShadowTools.plotxy(shadow_beam,1,3,nbins=101,title="Real space")
+    Shadow.ShadowTools.plotxy(shadow_beam,1,4,nbins=101,title="Phase space X")
+    Shadow.ShadowTools.plotxy(shadow_beam,3,6,nbins=101,title="Phase space Z")
 
     
