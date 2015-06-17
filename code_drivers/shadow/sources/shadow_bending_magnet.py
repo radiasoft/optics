@@ -4,7 +4,7 @@ __author__ = 'labx'
 import Shadow
 import numpy
 
-from optics.driver.abstract_driver_setting import AbstractDriverSetting
+from code_drivers.shadow.driver.shadow_driver_setting import ShadowDriverSetting
 from code_drivers.shadow.sources.shadow_source import ShadowSource
 
 class ShadowBendingMagnet(ShadowSource):
@@ -129,11 +129,9 @@ class ShadowBendingMagnet(ShadowSource):
             settings._max_number_of_rejected_rays = 10000000
 
 
-class ShadowBendingMagnetSetting(AbstractDriverSetting):
+class ShadowBendingMagnetSetting(ShadowDriverSetting):
     def __init__(self):
-        from code_drivers.shadow.driver.shadow_driver import ShadowDriver
-        AbstractDriverSetting.__init__(self,
-                                       driver=ShadowDriver())
+        ShadowDriverSetting.__init__(self)
 
         self._number_of_rays = 50000
         self._seed = 6775431

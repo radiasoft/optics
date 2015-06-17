@@ -4,14 +4,11 @@ Implements SRW Undulator settings.
 It is completely up to driver developer to design this object.
 The only requirement is that it inherits from AbstractDriverSetting that is initialized with the driver it belongs to.
 """
-from optics.driver.abstract_driver_setting import AbstractDriverSetting
+from code_drivers.SRW.SRW_driver_setting import SRWDriverSetting
 
-
-class SRWUndulatorSetting(AbstractDriverSetting):
+class SRWUndulatorSetting(SRWDriverSetting):
     def __init__(self):
-        from code_drivers.SRW.SRW_driver import SRWDriver
-        AbstractDriverSetting.__init__(self,
-                                       driver=SRWDriver())
+        SRWDriverSetting.__init__(self)
 
         self._meth        = 1         #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
         self._relPrec     = 0.01      #relative precision
