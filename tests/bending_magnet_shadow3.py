@@ -41,7 +41,7 @@ def test_bending_magnet_shadow3():
     shadow_bending_magnet_settings._max_vertical_half_divergence_from = 0.01
     shadow_bending_magnet_settings._max_vertical_half_divergence_to = 0.01
 
-    bending_magnet.addSettings(shadow_bending_magnet_settings)
+    bending_magnet.add_settings(shadow_bending_magnet_settings)
 
     #
     # 3) define beamline containing the optical elements
@@ -70,16 +70,16 @@ def test_bending_magnet_shadow3():
     #  Calculate the radiation (i.e., run the codes). It returns a native Shadow.Beam()
     #
 
-    shadow_beam = driver.calculateRadiation(electron_beam=electron_beam,
-                                            magnetic_structure=bending_magnet,
-                                            beamline=beamline,
-                                            energy_min = 0.6,
-                                            energy_max = 0.6)
+    shadow_beam = driver.calculate_radiation(electron_beam=electron_beam,
+                                             magnetic_structure=bending_magnet,
+                                             beamline=beamline,
+                                             energy_min = 0.6,
+                                             energy_max = 0.6)
 
     #
     # extract and plot the intensity
     #
-    intensity,dim_x,dim_y = driver.calculateIntensity(shadow_beam)
+    intensity,dim_x,dim_y = driver.calculate_intensity(shadow_beam)
 
     # clean temporary shadow files
     os.remove("effic.01")

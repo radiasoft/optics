@@ -24,7 +24,7 @@ class ShadowDriver(AbstractDriver):
     def processComponent(self, beamline_component, previous_result):
         return self.traceFromOE(beamline_component, previous_result)
 
-    def calculateRadiation(self, electron_beam, magnetic_structure, beamline, energy_min, energy_max):
+    def calculate_radiation(self, electron_beam, magnetic_structure, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
@@ -38,8 +38,8 @@ class ShadowDriver(AbstractDriver):
         if isinstance(magnetic_structure, BendingMagnet):
 
             # If BendingMagnet is not configured for shadow add default settings.
-            if not magnetic_structure.hasSettings(ShadowDriver()):
-                magnetic_structure.addSettings(ShadowBendingMagnetSetting(energy_min=energy_min,
+            if not magnetic_structure.has_settings(ShadowDriver()):
+                magnetic_structure.add_settings(ShadowBendingMagnetSetting(energy_min=energy_min,
                                                                           energy_max=energy_max))
 
             # Create a ShadowSource for shadow API.
@@ -135,7 +135,7 @@ class ShadowDriver(AbstractDriver):
     def traceFromOE(self, shadow_oe, input_shadow_beam):
         return ShadowBeam.traceFromOE(shadow_oe, input_shadow_beam)
 
-    def calculateIntensity(self, radiation):
+    def calculate_intensity(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation
@@ -152,7 +152,7 @@ class ShadowDriver(AbstractDriver):
 
         return [out_dict['histogram'], dim_x, dim_y]
 
-    def calculatePhase(self, radiation):
+    def calculate_phase(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation

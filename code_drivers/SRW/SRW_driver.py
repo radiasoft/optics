@@ -21,7 +21,7 @@ from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponent
 
 class SRWDriver(AbstractDriver):
 
-    def calculateRadiation(self,electron_beam, magnetic_structure, beamline, energy_min, energy_max):
+    def calculate_radiation(self,electron_beam, magnetic_structure, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
@@ -40,7 +40,7 @@ class SRWDriver(AbstractDriver):
         srw_adapter = SRWAdapter()
 
         # Create srw electron beam from generic electron beam.
-        srw_electron_beam = srw_adapter.SRWElectronBeam(electron_beam)
+        srw_electron_beam = srw_adapter.SRW_electron_beam(electron_beam)
 
         # Calculate the source radiation depending on the chosen source.
         # Only undulator here.
@@ -48,20 +48,20 @@ class SRWDriver(AbstractDriver):
         if isinstance(magnetic_structure, Undulator):
             undulator = magnetic_structure
 
-            srw_undulator = srw_adapter.magnetFieldFromUndulator(undulator)
+            srw_undulator = srw_adapter.magnetic_field_from_undulator(undulator)
             max_theta = undulator.gaussianCentralConeDivergence(electron_beam.gamma()) * 2.5
 
             z_start = undulator.length()+position_first_component.z()
             grid_length = max_theta * z_start / sqrt(2.0)
 
-            wavefront = srw_adapter.createQuadraticSRWWavefrontSingleEnergy(grid_size=1000,
+            wavefront = srw_adapter.create_quadratic_SRW_wavefront_single_energy(grid_size=1000,
                                                                             grid_length=grid_length,
                                                                             z_start=z_start,
                                                                             srw_electron_beam=srw_electron_beam,
                                                                             energy=int(undulator.resonanceEnergy(electron_beam.gamma(),0.0,0.0)))
 
             # Use custom settings if present. Otherwise use default SRW settings.
-            if undulator.hasSettings(self):
+            if undulator.has_settings(self):
                 # Mind the self in the next line.
                 # It tells the DriverSettingsManager to use SRW settings.
                 undulator_settings = undulator.settings(self)
@@ -73,12 +73,12 @@ class SRWDriver(AbstractDriver):
             bending_magnet = magnetic_structure
 
             # Use custom settings if present. Otherwise use default SRW settings.
-            if bending_magnet.hasSettings(self):
+            if bending_magnet.has_settings(self):
                 bending_magnet_settings = bending_magnet.settings(self)
             else:
                 bending_magnet_settings = SRWBendingMagnetSetting()
 
-            srw_bending_magnet = srw_adapter.magnetFieldFromBendingMagnet(bending_magnet)
+            srw_bending_magnet = srw_adapter.magnetic_field_from_bending_magnet(bending_magnet)
 
             # Determine position of first optical element to calculate initial wavefront there.
             z_start = position_first_component.z()
@@ -93,7 +93,7 @@ class SRWDriver(AbstractDriver):
             vertical_grid_length = 0.5*vertical_angle*z_start
 
             # Create rectangular SRW wavefront.
-            wavefront = srw_adapter.createRectangularSRWWavefront(grid_size=10,
+            wavefront = srw_adapter.create_rectangular_SRW_wavefront(grid_size=10,
                                                                   grid_length_vertical=horizontal_grid_length,
                                                                   grid_length_horizontal=vertical_grid_length,
                                                                   z_start=z_start,
@@ -122,7 +122,7 @@ class SRWDriver(AbstractDriver):
             if position.z() > current_z_position:
                 distance = position.z()-current_z_position
                 srw_optical_element.append(SRWLOptD(distance))
-                srw_preferences.append(SRWBeamlineComponentSetting().toList())
+                srw_preferences.append(SRWBeamlineComponentSetting().to_list())
                 current_z_position = position.z()
 
             if isinstance(component, LensIdeal):
@@ -135,14 +135,14 @@ class SRWDriver(AbstractDriver):
                 raise NotImplementedError
 
             # Use custom settings if present. Otherwise use default SRW settings.
-            if component.hasSettings(self):
+            if component.has_settings(self):
                 # Mind the self in the next line.
                 # It tells the DriverSettingsManager to use SRW settings.
                 component_settings = component.settings(self)
             else:
                 component_settings = SRWBeamlineComponentSetting()
 
-            srw_preferences.append(component_settings.toList())
+            srw_preferences.append(component_settings.to_list())
 
         # Create the srw beamline object.
         srw_beamline = SRWLOptC(srw_optical_element,
@@ -157,7 +157,7 @@ class SRWDriver(AbstractDriver):
 
         return wavefront
 
-    def calculateIntensity(self, radiation):
+    def calculate_intensity(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation
@@ -181,7 +181,7 @@ class SRWDriver(AbstractDriver):
 
         return [intensity.transpose(), dim_x, dim_y]
 
-    def calculatePhase(self, radiation):
+    def calculate_phase(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation

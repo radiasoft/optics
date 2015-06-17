@@ -5,7 +5,7 @@ from srwlib import *
 
 class SRWAdapter:
 
-    def SRWElectronBeam(self, electron_beam):
+    def SRW_electron_beam(self, electron_beam):
         """
         Translate generic electron beam to srw "electron beam".
         """
@@ -30,7 +30,7 @@ class SRWAdapter:
 
         return srw_electron_beam
 
-    def SRWUndulator(self, undulator):
+    def SRW_undulator(self, undulator):
         """
         Translate generic undulator to srw "undulator".
         """
@@ -50,18 +50,18 @@ class SRWAdapter:
 
         return srw_undulator
 
-    def magnetFieldFromUndulator(self, undulator):
+    def magnetic_field_from_undulator(self, undulator):
         """
         Generate srw magnetic fields.
         """
-        srw_undulator = self.SRWUndulator(undulator)
+        srw_undulator = self.SRW_undulator(undulator)
 
         magnetic_fields = SRWLMagFldC([srw_undulator],
                                       array('d', [0]), array('d', [0]), array('d', [0]))
 
         return magnetic_fields
 
-    def SRWBendingMagnet(self, bending_magnet):
+    def SRW_bending_magnet(self, bending_magnet):
         """
         Translate generic bending magnet to srw "multipole magnet".
         """
@@ -74,18 +74,18 @@ class SRWAdapter:
 
         return srw_bending_magnet
 
-    def magnetFieldFromBendingMagnet(self, bending_magnet):
+    def magnetic_field_from_bending_magnet(self, bending_magnet):
         """
         Generate srw magnetic fields.
         """
-        srw_bending_magnet = self.SRWBendingMagnet(bending_magnet)
+        srw_bending_magnet = self.SRW_bending_magnet(bending_magnet)
 
         magnetic_fields = SRWLMagFldC([srw_bending_magnet],
                                       array('d', [0]), array('d', [0]), array('d', [0]))
 
         return magnetic_fields
 
-    def createRectangularSRWWavefront(self, grid_size, grid_length_vertical, grid_length_horizontal,
+    def create_rectangular_SRW_wavefront(self, grid_size, grid_length_vertical, grid_length_horizontal,
                                       z_start, srw_electron_beam, energy_min, energy_max):
         """
         Generates a rectangular srw wavefront.
@@ -104,7 +104,7 @@ class SRWAdapter:
 
         return srw_wavefront
 
-    def createQuadraticSRWWavefrontSingleEnergy(self, grid_size, grid_length, z_start, srw_electron_beam, energy):
+    def create_quadratic_SRW_wavefront_single_energy(self, grid_size, grid_length, z_start, srw_electron_beam, energy):
         """
         Generates a quadratic srw wavefront.
         """

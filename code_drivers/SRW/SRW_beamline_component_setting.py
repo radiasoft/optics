@@ -39,45 +39,18 @@ class SRWBeamlineComponentSetting(SRWDriverSetting):
         self._resize_factor_vertical = 1.0
         self._resize_resolution_vertical = 1.0
 
-    def setAutoResizeBeforePropagation(self, auto_resize_before_propagation):
-        self._auto_resize_before_propagation = auto_resize_before_propagation
+    def from_list(self, srw_parameter):
+        self._auto_resize_before_propagation = srw_parameter[0]
+        self._auto_resize_after_propagation = srw_parameter[1]
+        self._auto_resize_relative_precision = srw_parameter[2]
+        self._allow_semi_analytical_phase_treatment = srw_parameter[3]
+        self._resize_on_ft_side = srw_parameter[4]
+        self._resize_factor_horizontal = srw_parameter[5]
+        self._resize_resolution_horizontal = srw_parameter[6]
+        self._resize_factor_vertical = srw_parameter[7]
+        self._resize_resolution_vertical = srw_parameter[8]
 
-    def setAutoResizeAfterPropagation(self, auto_resize_after_propagation):
-        self._auto_resize_after_propagation = auto_resize_after_propagation
-
-    def setAutoResizeRelativePrecision(self, auto_resize_relative_precision):
-        self._auto_resize_relative_precision = auto_resize_relative_precision
-
-    def setAllowSemiAnalyticalPhaseTreatment(self, allow_semi_analytical_phase_treatment):
-        self._allow_semi_analytical_phase_treatment = allow_semi_analytical_phase_treatment
-
-    def setResizeOnFtSide(self, resize_on_ft_side):
-        self._resize_on_ft_side = resize_on_ft_side
-
-    def setResizeFactorHorizontal(self, resize_factor_horizontal):
-        self._resize_factor_horizontal = resize_factor_horizontal
-
-    def setResizeResolutionHorizontal(self, resize_resolution_horizontal):
-        self._resize_resolution_horizontal = resize_resolution_horizontal
-
-    def setResizeFactorVertical(self, resize_factor_vertical):
-        self._resize_factor_vertical = resize_factor_vertical
-
-    def setResizeResolutionVertical(self, resize_resolution_vertical):
-        self._resize_resolution_vertical = resize_resolution_vertical
-
-    def fromList(self, srw_parameter):
-        self.setAutoResizeBeforePropagation(srw_parameter[0])
-        self.setAutoResizeAfterPropagation(srw_parameter[1])
-        self.setAutoResizeRelativePrecision(srw_parameter[2])
-        self.setAllowSemiAnalyticalPhaseTreatment(srw_parameter[3])
-        self.setResizeOnFtSide(srw_parameter[4])
-        self.setResizeFactorHorizontal(srw_parameter[5])
-        self.setResizeResolutionHorizontal(srw_parameter[6])
-        self.setResizeFactorVertical(srw_parameter[7])
-        self.setResizeResolutionVertical(srw_parameter[8])
-
-    def toList(self):
+    def to_list(self):
         srw_parameter = list()
 
         #[0]: Auto-Resize (1) or not (0) Before propagation

@@ -9,7 +9,7 @@ class AbstractDriverSetting(object):
     def driver(self):
         return self._driver
 
-    def isDriver(self, driver):
+    def is_driver(self, driver):
 
         try:
             is_driver = type(self._driver) is type(driver)

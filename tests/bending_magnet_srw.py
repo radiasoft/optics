@@ -102,7 +102,7 @@ def test_bending_magnet_srw():
     srw_bending_magnet_setting.set_acceptance_angle(horizontal_angle=0.1,
                                                     vertical_angle=0.02)
     energy = 0.5*0.123984
-    bending_magnet.addSettings(srw_bending_magnet_setting)
+    bending_magnet.add_settings(srw_bending_magnet_setting)
 
     #
     # 3) define beamline containing the optical elements
@@ -122,11 +122,11 @@ def test_bending_magnet_srw():
     # Set settings for SRW.
     # These are settings that depend on the "driver" to use.
     # If no special settings are set the driver will use its default settings.
-    # If we do not wand to increase the resolution we can go with standard settings and would just remove the following 4 lines.
+    # If we do not want to increase the resolution we can go with standard settings and would just remove the following 4 lines.
     lens_setting = SRWBeamlineComponentSetting()
-    lens_setting.setResizeResolutionHorizontal(2.0)
-    lens_setting.setResizeResolutionVertical(2.0)
-    lens.addSettings(lens_setting)
+    lens_setting._resize_resolution_horizontal = 2.0
+    lens_setting._resize_resolution_vertical = 2.0
+    lens.add_settings(lens_setting)
 
 
     # Attach the component at its position to the beamline.
@@ -144,23 +144,23 @@ def test_bending_magnet_srw():
     # Specify to use SRW.
     driver = SRWDriver()
 
-    srw_wavefront = driver.calculateRadiation(electron_beam=electron_beam,
-                                              magnetic_structure=bending_magnet,
-                                              beamline=beamline,
-                                              energy_min=energy,
-                                              energy_max=energy)
+    srw_wavefront = driver.calculate_radiation(electron_beam=electron_beam,
+                                               magnetic_structure=bending_magnet,
+                                               beamline=beamline,
+                                               energy_min=energy,
+                                               energy_max=energy)
 
     #
     # extract the intensity
     #
-    intensity, dim_x,dim_y = driver.calculateIntensity(srw_wavefront)
+    intensity, dim_x, dim_y = driver.calculate_intensity(srw_wavefront)
 
     # Do some tests.
     assert abs(1.7063003e+09 - intensity[10, 10])<1e+6, \
         'Quick verification of intensity value'
 
     # Calculate phases.
-    phase = driver.calculatePhase(srw_wavefront)
+    phase = driver.calculate_phase(srw_wavefront)
 
 
     # Do some tests.

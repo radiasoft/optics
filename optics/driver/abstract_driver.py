@@ -4,7 +4,7 @@ Every program (SRW, SHADOW, ...) must implement a driver with the following meth
 """
 
 class AbstractDriver(object):
-    def calculateRadiation(self,electron_beam, radiation_source, beamline, energy_min, energy_max):
+    def calculate_radiation(self,electron_beam, radiation_source, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
@@ -19,7 +19,7 @@ class AbstractDriver(object):
         """
         raise Exception("Needs reimplementation")
 
-    def calculateIntensity(self, radiation):
+    def calculate_intensity(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation
@@ -27,7 +27,7 @@ class AbstractDriver(object):
         """
         raise Exception("Needs reimplementation")
 
-    def calculatePhase(self, radiation):
+    def calculate_phase(self, radiation):
         """
         Calculates intensity of the radiation.
         :param radiation: Object received from self.calculateRadiation
