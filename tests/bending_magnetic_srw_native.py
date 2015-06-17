@@ -4,7 +4,7 @@
 
 from __future__ import print_function #Python 2.7 compatibility
 from srwlib import *
-from uti_plot import * #required for plotting
+from tests.utilities.uti_plot import * #required for plotting
 import time
 import pytest
 

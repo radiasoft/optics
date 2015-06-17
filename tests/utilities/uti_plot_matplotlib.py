@@ -9,9 +9,9 @@ import platform
 from array import *
 from math import *
 import numpy as np
-import uti_plot_com
+import tests.utilities.uti_plot_com as uti_plot_com
 import uti_math
-import uti_plot
+import tests.utilities.uti_plot as uti_plot
 
 class Backend(object):
     def __init__(self, backend, fname_format):
