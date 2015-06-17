@@ -59,11 +59,11 @@ def test_bending_magnet_shadow3():
     lens_position = BeamlinePosition(5.0)
 
     # Attach the component at its position to the beamline.
-    beamline.attachComponentAt(lens, lens_position)
+    beamline.attach_component_at(lens, lens_position)
 
     # Attach a screen/image plane.
     plane_position = BeamlinePosition(10.0)
-    beamline.attachComponentAt(ImagePlane("Image screen"), plane_position)
+    beamline.attach_component_at(ImagePlane("Image screen"), plane_position)
 
 
     #

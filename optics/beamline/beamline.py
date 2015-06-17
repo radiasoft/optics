@@ -21,33 +21,33 @@ class Beamline(object):
 
         return insert_index
 
-    def attachComponentAt(self, beamline_component, beamline_position):
+    def attach_component_at(self, beamline_component, beamline_position):
 
         insert_index = self._findComponentInsertionIndex(beamline_position)
 
         self._components.insert(insert_index,beamline_component)
         self._positions.insert(insert_index,beamline_position)
 
-    def positionOf(self, beamline_component):
+    def position_of(self, beamline_component):
         component_index = self._components.index(beamline_component)
         position = self._positions[component_index]
 
         return position
 
-    def componentByIndex(self, index):
+    def component_by_index(self, index):
         if index < len(self._components):
             return self._components[index]
 
         return None
 
-    def componentByName(self, component_name):
+    def component_by_name(self, component_name):
         for component in self._components:
             if component.name() == component_name:
                 return component
 
         return None
 
-    def nextComponent(self, component):
+    def next_component(self, component):
         component_index = self._components.index(component)
 
         if len(self._components) <= component_index+1:
@@ -57,7 +57,7 @@ class Beamline(object):
 
         return next_component
 
-    def previousComponent(self, component):
+    def previous_component(self, component):
         component_index = self._components.index(component)
 
         if component_index == 0:

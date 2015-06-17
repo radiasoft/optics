@@ -54,19 +54,19 @@ class ShadowDriver(AbstractDriver):
         i = 0
         for component in beamline:
             i += 1
-            position = beamline.positionOf(component)
+            position = beamline.position_of(component)
 
-            previous_component = beamline.previousComponent(component)
+            previous_component = beamline.previous_component(component)
             if previous_component is None:
                 position_previous_component = BeamlinePosition(0.0)
             else:
-                position_previous_component = beamline.positionOf(next_component)
+                position_previous_component = beamline.position_of(next_component)
 
 
-            next_component = beamline.nextComponent(component)
+            next_component = beamline.next_component(component)
             if next_component is None:
                 break
-            position_next_component = beamline.positionOf(next_component)
+            position_next_component = beamline.position_of(next_component)
 
             shadow_oe = Shadow.OE()
 

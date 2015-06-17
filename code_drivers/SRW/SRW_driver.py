@@ -33,8 +33,8 @@ class SRWDriver(AbstractDriver):
         :return: SRW wavefront.
         """
         # Get position of the first component. We need this to know where to calculate the source radiation.
-        first_component = beamline.componentByIndex(0)
-        position_first_component = beamline.positionOf(first_component)
+        first_component = beamline.component_by_index(0)
+        position_first_component = beamline.position_of(first_component)
 
         # Instanciate an adapter.
         srw_adapter = SRWAdapter()
@@ -116,7 +116,7 @@ class SRWDriver(AbstractDriver):
         # In the real driver this should be refactored to separate functions.
         current_z_position = position_first_component.z()
         for component in beamline:
-            position = beamline.positionOf(component)
+            position = beamline.position_of(component)
 
             # Add drift space between two components.
             if position.z() > current_z_position:
