@@ -4,7 +4,9 @@ import Shadow
 
 # Import elements from common Glossary
 from optics.driver.abstract_driver import AbstractDriver
-from optics.source.bending_magnet import BendingMagnet
+
+from optics.magnetic_structures.bending_magnet import BendingMagnet
+
 from optics.beamline.beamline_position import BeamlinePosition
 
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal

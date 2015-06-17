@@ -6,12 +6,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from numpy import pi
 import scipy.constants.codata
 
-from optics.source.source import Source
+from optics.magnetic_structures.magnetic_structure import MagneticStructure
 
 
-class InsertionDevice(Source):
+class InsertionDevice(MagneticStructure):
     def __init__(self, K_vertical, K_horizontal, period_length, periods_number):
-        Source.__init__(self)
+        MagneticStructure.__init__(self)
 
         self._K_vertical = K_vertical
         self._K_horizontal = K_horizontal

@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from optics.driver.driver_setting_manager import DriverSettingManager
 
 
-class Source(DriverSettingManager):
+class MagneticStructure(DriverSettingManager):
     def __init__(self):
         DriverSettingManager.__init__(self)
 

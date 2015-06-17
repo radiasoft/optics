@@ -3,7 +3,7 @@ __author__ = 'labx'
 Implements a wiggler.
 """
 
-from optics.source.insertion_device import InsertionDevice
+from optics.magnetic_structures.insertion_device import InsertionDevice
 
 class Wiggler(InsertionDevice):
 

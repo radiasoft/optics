@@ -5,8 +5,9 @@ Minimal implementation of a SRW driver.
 from srwlib import *
 
 from optics.driver.abstract_driver import AbstractDriver
-from optics.source.undulator import Undulator
-from optics.source.bending_magnet import BendingMagnet
+
+from optics.magnetic_structures.undulator import Undulator
+from optics.magnetic_structures.bending_magnet import BendingMagnet
 
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 from optics.beamline.optical_elements.image_plane import ImagePlane

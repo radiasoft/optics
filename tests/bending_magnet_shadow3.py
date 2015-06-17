@@ -6,7 +6,7 @@ import os
 
 # Import elements from common Glossary
 from optics.beam.electron_beam_pencil import ElectronBeamPencil
-from optics.source.bending_magnet import BendingMagnet
+from optics.magnetic_structures.bending_magnet import BendingMagnet
 
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 from optics.beamline.optical_elements.image_plane import ImagePlane
@@ -113,8 +113,8 @@ def test_bending_magnet_shadow3():
     #
 
     shadow_beam = driver.calculateRadiation(electron_beam=electron_beam,
-                                          magnetic_structure=bending_magnet,
-                                          beamline=beamline)
+                                            magnetic_structure=bending_magnet,
+                                            beamline=beamline)
 
     #
     # extract and plot the intensity

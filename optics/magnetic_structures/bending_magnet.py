@@ -3,9 +3,9 @@ __author__ = 'labx'
 Implements a bending magnet.
 """
 
-from optics.source.source import Source
+from optics.magnetic_structures.magnetic_structure import MagneticStructure
 
-class BendingMagnet(Source):
+class BendingMagnet(MagneticStructure):
     def __init__(self, radius, magnetic_field, length):
         """
         Constructor.
@@ -13,7 +13,7 @@ class BendingMagnet(Source):
         :param magnetic_field: Magnetic field strength in T
         :param length: physical length of the bending magnet (along the arc) in m.
         """
-        Source.__init__(self)
+        MagneticStructure.__init__(self)
         self._radius = radius
         self._magnetic_field = magnetic_field
         self._length = length

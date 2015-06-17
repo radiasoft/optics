@@ -4,7 +4,7 @@ Example of a bending magnet emitting in infrared region for a single electron em
 
 # Import elements from common Glossary
 from optics.beam.electron_beam_pencil import ElectronBeamPencil
-from optics.source.bending_magnet import BendingMagnet
+from optics.magnetic_structures.bending_magnet import BendingMagnet
 
 from optics.beamline.optical_elements.lens.lens_ideal import LensIdeal
 from optics.beamline.optical_elements.image_plane import ImagePlane
@@ -135,8 +135,8 @@ def test_bending_magnet_srw():
     #  Calculate the radiation (i.e., run the codes). It returns a native SRWLWfr()
     #
     srw_wavefront = driver.calculateRadiation(electron_beam=electron_beam,
-                                          magnetic_structure=bending_magnet,
-                                          beamline=beamline)
+                                              magnetic_structure=bending_magnet,
+                                              beamline=beamline)
 
     #
     # extract and plot the intensity
