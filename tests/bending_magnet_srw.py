@@ -90,8 +90,6 @@ def test_bending_magnet_srw():
     srw_bending_magnet_setting.set_acceptance_angle(horizontal_angle=0.1,
                                                     vertical_angle=0.02)
     energy = 0.5*0.123984
-    srw_bending_magnet_setting.set_energy_min(energy)
-    srw_bending_magnet_setting.set_energy_max(energy)
     bending_magnet.addSettings(srw_bending_magnet_setting)
 
     #
@@ -134,7 +132,9 @@ def test_bending_magnet_srw():
     #
     srw_wavefront = driver.calculateRadiation(electron_beam=electron_beam,
                                               magnetic_structure=bending_magnet,
-                                              beamline=beamline)
+                                              beamline=beamline,
+                                              energy_min=energy,
+                                              energy_max=energy)
 
     #
     # extract the intensity

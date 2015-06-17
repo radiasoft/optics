@@ -24,24 +24,26 @@ class ShadowDriver(AbstractDriver):
     def processComponent(self, beamline_component, previous_result):
         return self.traceFromOE(beamline_component, previous_result)
 
-    def calculateRadiation(self,electron_beam, magnetic_structure, beamline):
+    def calculateRadiation(self, electron_beam, magnetic_structure, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
         :param electron_beam: ElectronBeam object
         :param magnetic_structure: Source object
         :param beamline: Beamline object
+        :param energy_min: Minimal energy for the calculation
+        :param energy_max: Maximal energy for the calculation
         :return: ShadowBeam.
         """
-
         if isinstance(magnetic_structure, BendingMagnet):
 
             # If BendingMagnet is not configured for shadow add default settings.
             if not magnetic_structure.hasSettings(ShadowDriver()):
-                magnetic_structure.addSettings(ShadowBendingMagnetSetting())
+                magnetic_structure.addSettings(ShadowBendingMagnetSetting(energy_min=energy_min,
+                                                                          energy_max=energy_max))
 
             # Create a ShadowSource for shadow API.
-            shadow_source = ShadowBendingMagnet(electron_beam, magnetic_structure)
+            shadow_source = ShadowBendingMagnet(electron_beam, magnetic_structure, energy_min, energy_max)
         else:
             raise NotImplementedError("Only Bending Magnet implemented right now")
 

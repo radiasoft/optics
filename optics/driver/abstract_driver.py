@@ -4,13 +4,15 @@ Every program (SRW, SHADOW, ...) must implement a driver with the following meth
 """
 
 class AbstractDriver(object):
-    def calculateRadiation(self,electron_beam, radiation_source, beamline):
+    def calculateRadiation(self,electron_beam, radiation_source, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
         :param electron_beam: ElectronBeam object
         :param radiation_source: Source object
         :param beamline: beamline object
+        :param energy_min: Minimal energy for the calculation
+        :param energy_max: Maximal energy for the calculation
         :return: Radiation object. The driver is free to design this object as it likes it. The only requirement is that
         this object is used to calculate intensity, phase, ... That means the driver needs to understands this object.
         In the case of SRW this would be something carrying the wavefront in shadow it would be a beam.

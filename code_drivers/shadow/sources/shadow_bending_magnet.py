@@ -8,14 +8,18 @@ from optics.driver.abstract_driver_setting import AbstractDriverSetting
 from code_drivers.shadow.sources.shadow_source import ShadowSource
 
 class ShadowBendingMagnet(ShadowSource):
-    def __init__(self, electron_beam, bending_magnet):
+    def __init__(self, electron_beam, bending_magnet, energy_min, energy_max):
         ShadowSource.__init__(self)
         self._electron_beam = electron_beam
         self._bending_magnet = bending_magnet
+        self._energy_min = energy_min
+        self._energy_max = energy_max
 
     def newInstance(self):
         return ShadowBendingMagnet(self._electron_beam,
-                                   self._bending_magnet)
+                                   self._bending_magnet,
+                                   self._energy_min,
+                                   self._energy_max)
 
     def toNativeShadowSource(self):
         src = Shadow.Source()
@@ -50,8 +54,11 @@ class ShadowBendingMagnet(ShadowSource):
 
         src.NPOINT = settings._number_of_rays
         src.ISTAR1 = settings._seed
-        src.PH1 = settings._e_min
-        src.PH2 = settings._e_max
+
+        # Set energy range.
+        src.PH1 = self._energy_min
+        src.PH2 = self._energy_max
+
         src.F_POL = 1 + settings._generate_polarization
 
         #TODO: this will come from electron beam
@@ -87,8 +94,8 @@ class ShadowBendingMagnet(ShadowSource):
 
         settings._number_of_rays=src.NPOINT
         settings._seed=src.ISTAR1
-        settings._e_min=src.PH1
-        settings._e_max=src.PH2
+        self._energy_min=src.PH1
+        self._energy_max=src.PH2
         settings._store_optical_paths=src.F_OPD
         settings._sample_distribution=src.F_SR_TYPE
         settings._generate_polarization=src.F_POL-1
@@ -130,8 +137,6 @@ class ShadowBendingMagnetSetting(AbstractDriverSetting):
 
         self._number_of_rays = 50000
         self._seed = 6775431
-        self._e_min = 5000
-        self._e_max = 100000
         self._generate_polarization = 2
 
         #TODO:  belongs to ElectronBeam

@@ -45,15 +45,3 @@ class SRWBendingMagnetSetting(AbstractDriverSetting):
 
     def vertical_acceptance_angle(self):
         return self._vertical_acceptance_angle
-
-    def set_energy_min(self, energy_min):
-        self._energy_min = energy_min
-
-    def energy_min(self):
-        return self._energy_min
-
-    def set_energy_max(self, energy_max):
-        self._energy_max = energy_max
-
-    def energy_max(self):
-        return self._energy_max

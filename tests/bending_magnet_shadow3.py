@@ -36,8 +36,6 @@ def test_bending_magnet_shadow3():
 
     # Attach SHADOW bending magnet settings.
     shadow_bending_magnet_settings = ShadowBendingMagnetSetting()
-    shadow_bending_magnet_settings._e_max = 0.0600
-    shadow_bending_magnet_settings._e_min = 0.0600
     shadow_bending_magnet_settings._number_of_rays = 26000
     shadow_bending_magnet_settings._calculation_mode = 1
     shadow_bending_magnet_settings._max_vertical_half_divergence_from = 0.01
@@ -74,7 +72,9 @@ def test_bending_magnet_shadow3():
 
     shadow_beam = driver.calculateRadiation(electron_beam=electron_beam,
                                             magnetic_structure=bending_magnet,
-                                            beamline=beamline)
+                                            beamline=beamline,
+                                            energy_min = 0.6,
+                                            energy_max = 0.6)
 
     #
     # extract and plot the intensity

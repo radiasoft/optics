@@ -19,13 +19,15 @@ from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponent
 
 class SRWDriver(AbstractDriver):
 
-    def calculateRadiation(self,electron_beam, magnetic_structure, beamline):
+    def calculateRadiation(self,electron_beam, magnetic_structure, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
         :param electron_beam: ElectronBeam object
         :param magnetic_structure: Source object
         :param beamline: beamline object
+        :param energy_min: Minimal energy for the calculation
+        :param energy_max: Maximal energy for the calculation
         :return: SRW wavefront.
         """
         # Get position of the first component. We need this to know where to calculate the source radiation.
@@ -87,10 +89,6 @@ class SRWDriver(AbstractDriver):
             # Vertical
             vertical_angle = bending_magnet_settings.vertical_acceptance_angle()
             vertical_grid_length = 0.5*vertical_angle*z_start
-
-            # Determine energy of the radiation.
-            energy_min = bending_magnet_settings.energy_min()
-            energy_max = bending_magnet_settings.energy_max()
 
             # Create rectangular SRW wavefront.
             wavefront = srw_adapter.createRectangularSRWWavefront(grid_size=10,
