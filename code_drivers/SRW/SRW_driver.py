@@ -163,8 +163,8 @@ class SRWDriver(AbstractDriver):
         mesh = deepcopy(wavefront.mesh)
         intensity = array('f', [0]*mesh.nx*mesh.ny)
         srwl.CalcIntFromElecField(intensity, wavefront, 6, 0, 3, mesh.eStart, 0, 0)
-        dim_x = np.linspace(1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx)
-        dim_y = np.linspace(1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny)
+        dim_x = np.linspace(mesh.xStart, mesh.xFin, mesh.nx)
+        dim_y = np.linspace(mesh.yStart, mesh.yFin, mesh.ny)
         intensity = np.array(intensity).reshape((mesh.ny,mesh.nx))
         return [intensity.transpose(), dim_x, dim_y]
 
@@ -179,7 +179,7 @@ class SRWDriver(AbstractDriver):
 
         phase = array('d', [0]*mesh.nx*mesh.ny)
         srwl.CalcIntFromElecField(phase, wavefront, 0, 4, 3, mesh.eStart, 0, 0)
-        dim_x = np.linspace(1e+06*mesh.xStart, 1e+06*mesh.xFin, mesh.nx)
-        dim_y = np.linspace(1e+06*mesh.yStart, 1e+06*mesh.yFin, mesh.ny)
+        dim_x = np.linspace(mesh.xStart, mesh.xFin, mesh.nx)
+        dim_y = np.linspace(mesh.yStart, mesh.yFin, mesh.ny)
 
         return [phase, dim_x, dim_y]

@@ -144,7 +144,11 @@ class ShadowDriver(AbstractDriver):
 
         out_dict = shadow_beam._beam.plotxy(1,3,nolost=1,nbins_h=100,nbins_v=50)
 
-        return [out_dict['histogram'], out_dict['bin_h_left'], out_dict['bin_v_left']]
+        # Convert to m.
+        dim_x = out_dict['bin_h_left'] / 100.0
+        dim_y = out_dict['bin_v_left'] / 100.0
+
+        return [out_dict['histogram'], dim_x, dim_y]
 
     def calculatePhase(self, radiation):
         """
