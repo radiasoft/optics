@@ -69,6 +69,7 @@ class ShadowDriver(AbstractDriver):
             position_next_component = beamline.position_of(next_component)
 
             shadow_oe = Shadow.OE()
+            shadow_oe.FWRITE = 3 # shadow does not write files
 
             if isinstance(component, LensIdeal):
 
@@ -144,7 +145,7 @@ class ShadowDriver(AbstractDriver):
         shadow_beam = radiation
         #plot_mesh_x, plot_mesh_y, intensity = self._gaussianBroadenedIntensity(shadow_beam._beam.rays)
 
-        out_dict = shadow_beam._beam.plotxy(1,3,nolost=1,nbins_h=100,nbins_v=50)
+        out_dict = shadow_beam._beam.histo2(1,3,nolost=1,nbins_h=100,nbins_v=50)
 
         # Convert to m.
         dim_x = out_dict['bin_h_left'] / 100.0

@@ -61,17 +61,18 @@ def bending_magnet_esrf_shadow3_native_run():
     oe1.T_INCIDENCE = 45.0
     oe1.T_REFLECTION = 45.0
     oe1.T_SOURCE = 2500.0
+    oe1.FWRITE = 3 # shadow does not write files
 
 
     #Run SHADOW to create the source
 
     if iwrite:
-        oe0.write("start_py.00")
+        oe0.write("start.00")
 
     beam.genSource(oe0)
 
     if iwrite:
-        oe0.write("end_py.00")
+        oe0.write("end.00")
         beam.write("begin.dat")
 
 
@@ -79,11 +80,16 @@ def bending_magnet_esrf_shadow3_native_run():
     #run optical element 1
     #
     if iwrite:
-        oe1.write("start_py.01")
+        oe1.write("start.01")
+        #write systemfile.dat for importing system in user interfaces
+        f = open('systemfile.dat','w')
+        f.write("start.01")
+        f.close()
     beam.traceOE(oe1,1)
     if iwrite:
-        oe1.write("end_py.01")
+        oe1.write("end.01")
         beam.write("star.01")
+        print("SHADOW files created: start.00 end.00 begin.dat start.01 end.01 star.01 systemfile.dat")
 
 
 
@@ -92,12 +98,7 @@ def bending_magnet_esrf_shadow3_native_run():
 def test_bending_magnet_esrf_shadow3_native():
     shadow_beam = bending_magnet_esrf_shadow3_native_run()
 
-    os.remove("effic.01")
-    os.remove("mirr.01")
-    os.remove("rmir.01")
     os.remove("SPER15000")
-    os.remove("optax.01")
-    os.remove("star.01")
     os.remove("FLUX")
     os.remove("SPAR15000")
     os.remove("STOT15000")
@@ -113,7 +114,7 @@ if __name__ == "__main__":
     shadow_beam = test_bending_magnet_esrf_shadow3_native()
 
     Shadow.ShadowTools.plotxy(shadow_beam,1,3,nbins=101,title="Real space")
-    Shadow.ShadowTools.plotxy(shadow_beam,1,4,nbins=101,title="Phase space X")
-    Shadow.ShadowTools.plotxy(shadow_beam,3,6,nbins=101,title="Phase space Z")
+    # Shadow.ShadowTools.plotxy(shadow_beam,1,4,nbins=101,title="Phase space X")
+    # Shadow.ShadowTools.plotxy(shadow_beam,3,6,nbins=101,title="Phase space Z")
 
     

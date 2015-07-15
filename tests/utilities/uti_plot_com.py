@@ -8,7 +8,7 @@ from array import *
 #import sys
 #from array import *
 #from math import *
-import uti_math
+import tests.utilities.uti_math as uti_math
 
 #****************************************************************************
 #def srw_ascii_load(fname):

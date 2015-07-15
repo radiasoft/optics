@@ -10,7 +10,7 @@ from array import *
 from math import *
 import numpy as np
 import tests.utilities.uti_plot_com as uti_plot_com
-import uti_math
+import tests.utilities.uti_math as uti_math
 import tests.utilities.uti_plot as uti_plot
 
 class Backend(object):

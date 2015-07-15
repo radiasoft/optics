@@ -36,7 +36,7 @@ def test_bending_magnet_shadow3():
 
     # Attach SHADOW bending magnet settings.
     shadow_bending_magnet_settings = ShadowBendingMagnetSetting()
-    shadow_bending_magnet_settings._number_of_rays = 26000
+    shadow_bending_magnet_settings._number_of_rays = 5000
     shadow_bending_magnet_settings._calculation_mode = 1
     shadow_bending_magnet_settings._max_vertical_half_divergence_from = 0.01
     shadow_bending_magnet_settings._max_vertical_half_divergence_to = 0.01
@@ -75,26 +75,28 @@ def test_bending_magnet_shadow3():
                                              beamline=beamline,
                                              energy_min = 0.6,
                                              energy_max = 0.6)
-
+    h1 = shadow_beam.getOEHistory(1)
+    print(h1)
     #
     # extract and plot the intensity
     #
     intensity,dim_x,dim_y = driver.calculate_intensity(shadow_beam)
 
     # clean temporary shadow files
-    os.remove("effic.01")
-    os.remove("mirr.01")
-    os.remove("rmir.01")
+    # os.remove("effic.01")
+    # os.remove("mirr.01")
+    # os.remove("rmir.01")
+    # os.remove("optax.01")
+    # os.remove("star.01")
+
     os.remove("SPER00000")
-    os.remove("optax.01")
-    os.remove("star.01")
     os.remove("FLUX")
     os.remove("SPAR00000")
     os.remove("STOT00000")
 
     # Do some tests
     # Shadow results are random. But test at least that it really run
-    assert shadow_beam._beam.rays.shape == (26000, 18), "Test shadow beam shape"
+    assert shadow_beam._beam.rays.shape == (5000, 18), "Test shadow beam shape"
     assert np.sum(np.abs(shadow_beam._beam.rays[:,7])) > 1, "Test E field not zero"
 
     return dim_x, dim_y, intensity
