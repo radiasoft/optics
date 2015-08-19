@@ -26,7 +26,7 @@ class SRWAdapter:
         srw_electron_beam.arStatMom2[3] = electron_beam._moment_yy   #<(y-y0)^2>
         srw_electron_beam.arStatMom2[4] = electron_beam._moment_yyp  #<(y-y0)*(y'-y'0)> [m]
         srw_electron_beam.arStatMom2[5] = electron_beam._moment_ypyp #<(y'-y'0)^2>
-        srw_electron_beam.arStatMom2[10] = electron_beam._energy_spread #<(E-E0)^2>/E0^2
+        srw_electron_beam.arStatMom2[10] = electron_beam._energy_spread**2 #<(E-E0)^2>/E0^2
 
         return srw_electron_beam
 
@@ -91,6 +91,8 @@ class SRWAdapter:
         Generates a rectangular srw wavefront.
         """
         srw_wavefront = SRWLWfr()
+
+
         srw_wavefront.allocate(1, grid_size, grid_size)
         srw_wavefront.mesh.zStart = float(z_start)
         srw_wavefront.mesh.eStart = energy_min

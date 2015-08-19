@@ -61,7 +61,7 @@ class ShadowBendingMagnet(ShadowSource):
 
         src.F_POL = 1 + settings._generate_polarization
 
-        #TODO: this will come from electron beam
+        #this come from electron beam
         src.SIGMAX = 100.0*numpy.sqrt(self._electron_beam._moment_xx) #  settings._sigma_x
         src.SIGMAZ = 100.0*numpy.sqrt(self._electron_beam._moment_yy) # settings._sigma_z
         src.EPSI_X = 100.0*numpy.sqrt(self._electron_beam._moment_xx)*numpy.sqrt(self._electron_beam._moment_xpxp)
@@ -84,7 +84,9 @@ class ShadowBendingMagnet(ShadowSource):
         src.FILE_BOUND = bytes(settings._optimize_file_name, 'utf-8')
         src.NTOTALPOINT = settings._max_number_of_rejected_rays
 
-
+        if 1:
+            src.write("start.00-1")
+            print("File written to disk start.00-1")
         return src
 
     #TODO remove this method? What's the interest? Do not set glossary objects from here...

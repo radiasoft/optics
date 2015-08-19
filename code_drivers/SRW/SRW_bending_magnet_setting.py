@@ -34,6 +34,27 @@ class SRWBendingMagnetSetting(SRWDriverSetting):
 
         return precision_parameter
 
+    def set_meth(self, meth):
+        self._meth = meth
+
+    def set_relPrec(self, relPrec):
+        self._relPrec = relPrec
+
+    def set_zStartInteg(self, zStartInteg):
+        self._zStartInteg = zStartInteg
+
+    def set_zEndInteg(self, zEndInteg):
+        self._zEndInteg = zEndInteg
+
+    def set_npTraj(self, npTraj):
+        self._npTraj = npTraj
+
+    def set_useTermin(self, useTermin):
+        self._useTermin = useTermin
+
+    def set_sampFactNxNyForProp(self, sampFactNxNyForProp):
+        self._sampFactNxNyForProp = sampFactNxNyForProp
+
     def set_acceptance_angle(self, horizontal_angle, vertical_angle):
         self._horizontal_acceptance_angle = horizontal_angle
         self._vertical_acceptance_angle   = vertical_angle

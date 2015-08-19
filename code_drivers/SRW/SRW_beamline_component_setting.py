@@ -39,16 +39,45 @@ class SRWBeamlineComponentSetting(SRWDriverSetting):
         self._resize_factor_vertical = 1.0
         self._resize_resolution_vertical = 1.0
 
+        self.set_drift_space_settings(None)
+
+    def set_auto_resize_before_propagation(self, auto_resize_before_propagation):
+        self._auto_resize_before_propagation = auto_resize_before_propagation
+
+    def set_auto_resize_after_propagation(self, auto_resize_after_propagation):
+        self._auto_resize_after_propagation = auto_resize_after_propagation
+
+    def set_auto_resize_relative_precision(self, auto_resize_relative_precision):
+        self._auto_resize_relative_precision = auto_resize_relative_precision
+
+    def set_allow_semi_analytical_phase_treatment(self, allow_semi_analytical_phase_treatment):
+        self._allow_semi_analytical_phase_treatment = allow_semi_analytical_phase_treatment
+
+    def set_resize_on_ft_side(self, resize_on_ft_side):
+        self._resize_on_ft_side = resize_on_ft_side
+
+    def set_resize_factor_horizontal(self, resize_factor_horizontal):
+        self._resize_factor_horizontal = resize_factor_horizontal
+
+    def set_resize_resolution_horizontal(self, resize_resolution_horizontal):
+        self._resize_resolution_horizontal = resize_resolution_horizontal
+
+    def set_resize_factor_vertical(self, resize_factor_vertical):
+        self._resize_factor_vertical = resize_factor_vertical
+
+    def set_resize_resolution_vertical(self, resize_resolution_vertical):
+        self._resize_resolution_vertical = resize_resolution_vertical
+
     def from_list(self, srw_parameter):
-        self._auto_resize_before_propagation = srw_parameter[0]
-        self._auto_resize_after_propagation = srw_parameter[1]
-        self._auto_resize_relative_precision = srw_parameter[2]
-        self._allow_semi_analytical_phase_treatment = srw_parameter[3]
-        self._resize_on_ft_side = srw_parameter[4]
-        self._resize_factor_horizontal = srw_parameter[5]
-        self._resize_resolution_horizontal = srw_parameter[6]
-        self._resize_factor_vertical = srw_parameter[7]
-        self._resize_resolution_vertical = srw_parameter[8]
+        self.set_auto_resize_before_propagation(srw_parameter[0])
+        self.set_auto_resize_after_propagation(srw_parameter[1])
+        self.set_auto_resize_relative_precision(srw_parameter[2])
+        self.set_allow_semi_analytical_phase_treatment(srw_parameter[3])
+        self.set_resize_on_ft_side(srw_parameter[4])
+        self.set_resize_factor_horizontal(srw_parameter[5])
+        self.set_resize_resolution_horizontal(srw_parameter[6])
+        self.set_resize_factor_vertical(srw_parameter[7])
+        self.set_resize_resolution_vertical(srw_parameter[8])
 
     def to_list(self):
         srw_parameter = list()
@@ -80,3 +109,10 @@ class SRWBeamlineComponentSetting(SRWDriverSetting):
         srw_parameter.append(0)
 
         return srw_parameter
+
+    def set_drift_space_settings(self, drift_space_settings):
+        self._drift_space_settings = drift_space_settings
+
+    def has_drift_space_settings(self):
+        has_drift_space_settings = self._drift_space_settings is not None
+        return has_drift_space_settings

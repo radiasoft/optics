@@ -67,8 +67,9 @@ class SRWDriver(AbstractDriver):
                 undulator_settings = undulator.settings(self)
             else:
                 undulator_settings = SRWUndulatorSetting()
-
+            print("SRW_driver.calculate_radiation calls CalcElecFieldSR (undulator)...")
             srwl.CalcElecFieldSR(wavefront, 0, srw_undulator, undulator_settings.toList())
+            print("done in ",round(time.time() - t0), "s")
         elif isinstance(magnetic_structure, BendingMagnet):
             bending_magnet = magnetic_structure
 
@@ -102,7 +103,10 @@ class SRWDriver(AbstractDriver):
                                                                   energy_max=energy_max)
 
             # Calculate initial wavefront.
+            print("SRW_driver.calculate_radiation calls CalcElecFieldSR (bending magnet)...")
+            t0 = time.time()
             srwl.CalcElecFieldSR(wavefront, 0, srw_bending_magnet, bending_magnet_settings.to_list())
+            print("done in ",round(time.time() - t0), "s")
         else:
             raise NotImplementedError
 
@@ -122,7 +126,18 @@ class SRWDriver(AbstractDriver):
             if position.z() > current_z_position:
                 distance = position.z()-current_z_position
                 srw_optical_element.append(SRWLOptD(distance))
-                srw_preferences.append(SRWBeamlineComponentSetting().to_list())
+
+                if component.has_settings(self):
+                    component_settings = component.settings(self)
+
+                    if component_settings.has_drift_space_settings():
+                        drift_space_settings = component_settings._drift_space_settings
+                    else:
+                        # If there are no drift space settings use default settings.
+                        drift_space_settings = SRWBeamlineComponentSetting()
+
+                    #TODO: check this, it was inside else
+                    srw_preferences.append(drift_space_settings.to_list())
                 current_z_position = position.z()
 
             if isinstance(component, LensIdeal):
@@ -130,7 +145,7 @@ class SRWDriver(AbstractDriver):
                                          _Fy=component.focalY())
                 srw_optical_element.append(srw_component)
             elif isinstance(component, ImagePlane):
-                continue
+                pass
             else:
                 raise NotImplementedError
 
@@ -149,7 +164,10 @@ class SRWDriver(AbstractDriver):
                                 srw_preferences)
 
         # Call SRW to perform propagation.
+        print("SRW_driver calls PropagElecField...")
+        t0 = time.time()
         srwl.PropagElecField(wavefront, srw_beamline)
+        print("done in ",round(time.time() - t0), "s")
 
 
         # TODO: Decoration of SRW wavefront with glossary object. Consider to better use a "driver results" object.
@@ -172,8 +190,10 @@ class SRWDriver(AbstractDriver):
         else:
             intensity_method = 1
 
+        print("SRW_driver.calculate_intensity calls CalcIntFromElecField...")
+        t0 = time.time()
         srwl.CalcIntFromElecField(intensity, wavefront, 6, intensity_method, 3, mesh.eStart, 0, 0)
-
+        print("done in ",round(time.time() - t0), "s")
 
         dim_x = np.linspace(mesh.xStart, mesh.xFin, mesh.nx)
         dim_y = np.linspace(mesh.yStart, mesh.yFin, mesh.ny)
@@ -191,7 +211,11 @@ class SRWDriver(AbstractDriver):
         mesh = deepcopy(wavefront.mesh)
 
         phase = array('d', [0]*mesh.nx*mesh.ny)
+        print("SRW_driver.calculate_phase calls CalcIntFromElecField...")
+        t0 = time.time()
         srwl.CalcIntFromElecField(phase, wavefront, 0, 4, 3, mesh.eStart, 0, 0)
+        print("done in ",round(time.time() - t0), "s")
+
         dim_x = np.linspace(mesh.xStart, mesh.xFin, mesh.nx)
         dim_y = np.linspace(mesh.yStart, mesh.yFin, mesh.ny)
 
