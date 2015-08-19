@@ -124,7 +124,7 @@ class ShadowDriver(AbstractDriver):
             else:
                 raise NotImplementedError
 
-            if 1:
+            if 0: #debugging
                 shadow_oe.write("start.%02d-1"%i)
                 print("File written to disk: start.%02d-1"%i)
             shadow_beam._beam.traceOE(shadow_oe,i)
