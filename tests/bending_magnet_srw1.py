@@ -3,6 +3,9 @@
 Bending magnet emitting in x-ray region for a multi-electron emission
 (by convolution)
 """
+from __future__ import absolute_import, division, print_function
+from pykern.pkdebug import pkdc, pkdp
+
 import inspect
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,7 +25,7 @@ from optics.magnetic_structures.bending_magnet import BendingMagnet
 
 
 #: Set to True if you want output from the various stages
-_DEBUG = True
+PKDC = True
 
 
 #: Smallest number we can reasonably compare
@@ -32,7 +35,7 @@ _EPSILON = 1e-300
 def main():
     """test bending magnet and plot results"""
     res = test_bending_magnet_infrared()
-    _debug('Calling plots with array shape: {}...', res.intensity.shape)
+    pkdc('Calling plots with array shape: {}...', res.intensity.shape)
     plt.pcolormesh(res.dim_x, res.dim_y, res.intensity.transpose())
     plt.title('Real space for infrared example')
     plt.colorbar()
@@ -104,11 +107,11 @@ def test_bending_magnet_infrared():
     res = run_bending_magnet()
     flux = res.intensity.sum() \
         * (res.dim_x[1] - res.dim_x[0]) * (res.dim_y[1] - res.dim_y[0])
-    _debug('Total flux = {:10.5e} photons/s/.1%bw', flux)
+    pkdc('Total flux = {:10.5e} photons/s/.1%bw', flux)
     _assert(2.40966e+08, flux)
     checksum = np.sum(np.abs(res.wavefront.arEx)) \
         + np.sum(np.abs(res.wavefront.arEy))
-    _debug('checksum = {}', checksum)
+    pkdc('checksum = {}', checksum)
     _assert(1.845644e10, checksum, 0.1)
     return res
 
@@ -121,16 +124,6 @@ def _assert(expect, actual, expected_error=0.01):
         return
     raise AssertionError(
         'expect {} != {} actual'.format(expect, actual))
-
-
-def _debug(fmt, *args, **kwargs):
-    """Format and print the message if _DEBUG
-
-    Args:
-        fmt (str): format string
-    """
-    if _DEBUG:
-        print(fmt.format(*args, **kwargs))
 
 
 if __name__ == '__main__':
