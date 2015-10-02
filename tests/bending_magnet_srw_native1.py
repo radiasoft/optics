@@ -112,16 +112,6 @@ def _assert(expect, actual, expected_error=0.01):
     if _EPSILON > abs(expect):
         assert _EPSILON > abs(actual)
         return
-    elif _EPSILON > abs(actual):
-        raise AssertionError(
-            'expect {} != {} actual'.format(expect, actual))
-    assert expected_error > abs(expect/actual - 1)
-
-
-def _assert(expect, actual, expected_error=0.01):
-    if _EPSILON > abs(expect):
-        assert _EPSILON > abs(actual)
-        return
     if _EPSILON <= abs(actual) and expected_error > abs(expect/actual - 1):
         return
     raise AssertionError(
