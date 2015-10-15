@@ -1,6 +1,8 @@
 """
 Minimal implementation of a SRW driver.
 """
+import time
+import numpy as np
 
 from srwlib import *
 
@@ -21,7 +23,7 @@ from code_drivers.SRW.SRW_beamline_component_setting import SRWBeamlineComponent
 
 class SRWDriver(AbstractDriver):
 
-    def calculate_radiation(self,electron_beam, magnetic_structure, beamline, energy_min, energy_max):
+    def calculate_radiation(self, electron_beam, magnetic_structure, beamline, energy_min, energy_max):
         """
         Calculates radiation.
 
@@ -68,6 +70,7 @@ class SRWDriver(AbstractDriver):
             else:
                 undulator_settings = SRWUndulatorSetting()
             print("SRW_driver.calculate_radiation calls CalcElecFieldSR (undulator)...")
+            t0 = time.time()
             srwl.CalcElecFieldSR(wavefront, 0, srw_undulator, undulator_settings.toList())
             print("done in ",round(time.time() - t0), "s")
         elif isinstance(magnetic_structure, BendingMagnet):

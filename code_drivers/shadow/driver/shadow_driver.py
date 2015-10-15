@@ -36,22 +36,20 @@ class ShadowDriver(AbstractDriver):
         :return: ShadowBeam.
         """
         if isinstance(magnetic_structure, BendingMagnet):
-
             # If BendingMagnet is not configured for shadow add default settings.
             if not magnetic_structure.has_settings(ShadowDriver()):
-                magnetic_structure.add_settings(ShadowBendingMagnetSetting(energy_min=energy_min,
-                                                                          energy_max=energy_max))
+                magnetic_structure.add_settings(ShadowBendingMagnetSetting())
 
             # Create a ShadowSource for shadow API.
             shadow_source = ShadowBendingMagnet(electron_beam, magnetic_structure, energy_min, energy_max)
         else:
             raise NotImplementedError("Only Bending Magnet implemented right now")
 
-
         # Calculate the source's radiation / shadow beam with the shadow API.
         shadow_beam = self.processSource(shadow_source)
 
         i = 0
+
         for component in beamline:
             i += 1
             position = beamline.position_of(component)
@@ -60,7 +58,7 @@ class ShadowDriver(AbstractDriver):
             if previous_component is None:
                 position_previous_component = BeamlinePosition(0.0)
             else:
-                position_previous_component = beamline.position_of(next_component)
+                position_previous_component = beamline.position_of(previous_component)
 
 
             next_component = beamline.next_component(component)
@@ -124,9 +122,9 @@ class ShadowDriver(AbstractDriver):
             else:
                 raise NotImplementedError
 
-            if 0: #debugging
-                shadow_oe.write("start.%02d-1"%i)
-                print("File written to disk: start.%02d-1"%i)
+            shadow_oe.write("start.%02d"%(i-1))
+            print("File written to disk: start.%02d"%(i-1))
+
             shadow_beam._beam.traceOE(shadow_oe,i)
 
 
