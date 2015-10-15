@@ -111,7 +111,7 @@ class ShadowBeam(AbstractDriverResult):
     @classmethod
     def initializeFromPreviousBeam(cls, input_beam):
         shadow_beam = input_beam.duplicate()
-        shadow_beam._oe_number = input_beam.oe_number + 1
+        shadow_beam._oe_number = input_beam._oe_number + 1
 
         return shadow_beam
 
